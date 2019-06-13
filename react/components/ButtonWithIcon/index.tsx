@@ -1,12 +1,20 @@
-import React, { Component } from 'react'
+import React, { Component, forwardRef } from 'react'
 import PropTypes from 'prop-types'
 
 import Button from '../Button'
 
 import { withForwardedRef, refShape } from '../../modules/withForwardedRef'
 
-class ButtonWithIcon extends Component {
-  static propTypes = {
+interface Props {
+  children?: React.ReactNode
+  forwardRef: React.Ref<Node>
+  icon?: React.ReactNode
+  iconPosition?: 'left' | 'right'
+  size?: 'small' | 'regular' | 'large'
+}
+
+class ButtonWithIcon extends Component<Props> {
+  public static propTypes = {
     /** @ignore Button label */
     children: PropTypes.node,
     /** @ignore Forwarded Ref */
@@ -20,11 +28,11 @@ class ButtonWithIcon extends Component {
     size: PropTypes.oneOf(['small', 'regular', 'large']),
   }
 
-  static defaultProps = {
+  public static defaultProps = {
     iconPosition: 'left',
   }
 
-  render() {
+  public render() {
     const { icon, iconPosition, size, children } = this.props
 
     const hasIconOnly = !children
