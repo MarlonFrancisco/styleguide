@@ -1,19 +1,159 @@
-import React, { Component, Fragment } from 'react'
+import React, {
+  Component,
+  Fragment,
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  HTMLAttributes,
+} from 'react'
 import PropTypes from 'prop-types'
 
 import Spinner from '../Spinner'
 
 import { withForwardedRef, refShape } from '../../modules/withForwardedRef'
 
-class Button extends Component {
-  handleClick = event => {
+type ButtonProps = Pick<
+  React.DetailedHTMLProps<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  >,
+  'autoFocus' | 'disabled' | 'name' | 'type' | 'value'
+>
+type AnchorProps = Pick<
+  React.DetailedHTMLProps<
+    AnchorHTMLAttributes<HTMLAnchorElement>,
+    HTMLAnchorElement
+  >,
+  'href' | 'target' | 'rel' | 'referrerPolicy' | 'download'
+>
+
+interface Props
+  extends React.DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    AnchorProps,
+    ButtonProps {
+  block?: boolean
+  collapseLeft?: boolean
+  collapseRight?: boolean
+  icon?: boolean
+  iconOnly?: boolean
+  isActiveOfGroup?: boolean
+  isFirstOfGroup?: boolean
+  isGrouped?: boolean
+  isLastOfGroup?: boolean
+  isLoading?: boolean
+  size?: 'small' | 'regular' | 'large'
+  variation?:
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'inverted-tertiary'
+    | 'danger'
+    | 'danger-tertiary'
+}
+
+class Button extends Component<Props> {
+  public static defaultProps = {
+    size: 'regular',
+    block: false,
+    variation: 'primary',
+    disabled: false,
+    autoFocus: false,
+    icon: false,
+    type: 'button',
+    isLoading: false,
+    isGrouped: false,
+    isFirstOfGroup: false,
+    isLastOfGroup: false,
+    isActiveOfGroup: false,
+  }
+
+  public static propTypes = {
+    /** Button size  */
+    size: PropTypes.oneOf(['small', 'regular', 'large']),
+    /** Button prominence variation */
+    variation: PropTypes.oneOf([
+      'primary',
+      'secondary',
+      'tertiary',
+      'inverted-tertiary',
+      'danger',
+      'danger-tertiary',
+    ]),
+    /** Block style */
+    block: PropTypes.bool,
+    /** Loading state */
+    isLoading: PropTypes.bool,
+    /** [DEPRECATED] If you are using just an Icon component inside, use this as true */
+    icon: PropTypes.bool,
+    /** @ignore For internal use
+     * Sets reduced paddings in order to keep the button squareish if it
+     * only has an icon  */
+    iconOnly: PropTypes.bool,
+    /** (Button spec attribute) */
+    id: PropTypes.string,
+    /** (Button spec attribute) */
+    autoFocus: PropTypes.bool,
+    /** (Button spec attribute) */
+    autoComplete: PropTypes.string,
+    /** (Button spec attribute) */
+    disabled: PropTypes.bool,
+    /** @ignore Forwarded Ref */
+    forwardedRef: refShape,
+    /** (Button spec attribute) */
+    name: PropTypes.string,
+    /** (Button spec attribute) */
+    type: PropTypes.string,
+    /** (Button spec attribute) */
+    value: PropTypes.string,
+    /** Label of the Button */
+    children: PropTypes.node.isRequired,
+    /** onClick event. */
+    onClick: PropTypes.func,
+    /** URL for link mode. Converts the button internally to a link. */
+    href: PropTypes.string,
+    /** onMouseEnter event */
+    onMouseEnter: PropTypes.func,
+    /** onMouseLeave event */
+    onMouseLeave: PropTypes.func,
+    /** onMouseOver event */
+    onMouseOver: PropTypes.func,
+    /** onMouseOut event */
+    onMouseOut: PropTypes.func,
+    /** onMouseUp event */
+    onMouseUp: PropTypes.func,
+    /** onMouseDown event */
+    onMouseDown: PropTypes.func,
+    /** Cancels out left padding */
+    collapseLeft: PropTypes.bool,
+    /** Cancels out right padding */
+    collapseRight: PropTypes.bool,
+    /** */
+    isGrouped: PropTypes.bool,
+    /** */
+    isFirstOfGroup: PropTypes.bool,
+    /** */
+    isLastOfGroup: PropTypes.bool,
+    /** */
+    isActiveOfGroup: PropTypes.bool,
+    /** Link spec */
+    target: PropTypes.string,
+    /** Link spec */
+    rel: PropTypes.string,
+    /** Link spec */
+    referrerPolicy: PropTypes.string,
+    /** Link spec */
+    download: PropTypes.string,
+  }
+
+  private handleClick: React.MouseEventHandler<
+    HTMLButtonElement | HTMLAnchorElement
+  > = event => {
     !this.props.disabled &&
       !this.props.isLoading &&
       this.props.onClick &&
       this.props.onClick(event)
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     if (this.props.icon) {
       console.warn(
         'Button: The prop "icon" of the "Button" component has been deprecated, and will be removed in a future version. Please use the component "ButtonWithIcon" instead'
@@ -21,7 +161,7 @@ class Button extends Component {
     }
   }
 
-  render() {
+  public render() {
     const {
       size,
       block,
@@ -165,17 +305,23 @@ class Button extends Component {
       classes += 'inline-flex items-center no-underline '
     }
 
-    const style = {}
+    let style: React.CSSProperties = {}
 
+    let iconStyle
     if (iconOnly) {
-      style.fontSize = 0
+      iconStyle = {
+        fontSize: 0,
+      }
+      // style.fontSize = 0
     }
 
     // Active state receives the hover color of the Button.
     // No token available for this.
     if (isActiveOfGroup && !disabled) {
-      style.backgroundColor = '#0c389f'
-      style.borderColor = '#0c389f'
+      style = {
+        backgroundColor: '#0c389f',
+        borderColor: '#0c389f',
+      }
     }
 
     const linkModeProps = {
@@ -205,7 +351,10 @@ class Button extends Component {
         onMouseUp={this.props.onMouseUp}
         onMouseDown={this.props.onMouseDown}
         ref={this.props.forwardedRef}
-        style={style}
+        style={{
+          ...iconStyle,
+          ...style,
+        }}
         // Button-mode exclusive props
         type={iconOnly || href ? undefined : this.props.type}
         // Link-mode exclusive props
@@ -218,6 +367,7 @@ class Button extends Component {
                 size={loaderSize}
               />
             </span>
+            <a />
             <span className={`${labelClasses} o-0`}>{children}</span>
           </Fragment>
         ) : (
@@ -226,99 +376,6 @@ class Button extends Component {
       </Element>
     )
   }
-}
-
-Button.defaultProps = {
-  size: 'regular',
-  block: false,
-  variation: 'primary',
-  disabled: false,
-  autoFocus: false,
-  icon: false,
-  type: 'button',
-  isLoading: false,
-  isGrouped: false,
-  isFirstOfGroup: false,
-  isLastOfGroup: false,
-  isActiveOfGroup: false,
-}
-
-Button.propTypes = {
-  /** Button size  */
-  size: PropTypes.oneOf(['small', 'regular', 'large']),
-  /** Button prominence variation */
-  variation: PropTypes.oneOf([
-    'primary',
-    'secondary',
-    'tertiary',
-    'inverted-tertiary',
-    'danger',
-    'danger-tertiary',
-  ]),
-  /** Block style */
-  block: PropTypes.bool,
-  /** Loading state */
-  isLoading: PropTypes.bool,
-  /** [DEPRECATED] If you are using just an Icon component inside, use this as true */
-  icon: PropTypes.bool,
-  /** @ignore For internal use
-   * Sets reduced paddings in order to keep the button squareish if it
-   * only has an icon  */
-  iconOnly: PropTypes.bool,
-  /** (Button spec attribute) */
-  id: PropTypes.string,
-  /** (Button spec attribute) */
-  autoFocus: PropTypes.bool,
-  /** (Button spec attribute) */
-  autoComplete: PropTypes.string,
-  /** (Button spec attribute) */
-  disabled: PropTypes.bool,
-  /** @ignore Forwarded Ref */
-  forwardedRef: refShape,
-  /** (Button spec attribute) */
-  name: PropTypes.string,
-  /** (Button spec attribute) */
-  type: PropTypes.string,
-  /** (Button spec attribute) */
-  value: PropTypes.string,
-  /** Label of the Button */
-  children: PropTypes.node.isRequired,
-  /** onClick event. */
-  onClick: PropTypes.func,
-  /** URL for link mode. Converts the button internally to a link. */
-  href: PropTypes.string,
-  /** onMouseEnter event */
-  onMouseEnter: PropTypes.func,
-  /** onMouseLeave event */
-  onMouseLeave: PropTypes.func,
-  /** onMouseOver event */
-  onMouseOver: PropTypes.func,
-  /** onMouseOut event */
-  onMouseOut: PropTypes.func,
-  /** onMouseUp event */
-  onMouseUp: PropTypes.func,
-  /** onMouseDown event */
-  onMouseDown: PropTypes.func,
-  /** Cancels out left padding */
-  collapseLeft: PropTypes.bool,
-  /** Cancels out right padding */
-  collapseRight: PropTypes.bool,
-  /** */
-  isGrouped: PropTypes.bool,
-  /** */
-  isFirstOfGroup: PropTypes.bool,
-  /** */
-  isLastOfGroup: PropTypes.bool,
-  /** */
-  isActiveOfGroup: PropTypes.bool,
-  /** Link spec */
-  target: PropTypes.string,
-  /** Link spec */
-  rel: PropTypes.string,
-  /** Link spec */
-  referrerPolicy: PropTypes.string,
-  /** Link spec */
-  download: PropTypes.string,
 }
 
 export default withForwardedRef(Button)
