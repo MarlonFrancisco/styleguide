@@ -5,8 +5,28 @@ import { baseClassname } from '../icon/utils'
 const radius = 40
 const circ = 2 * radius * Math.PI
 
-class Spinner extends React.Component {
-  render() {
+interface Props {
+  color?: string
+  size?: number
+  block?: boolean
+}
+
+class Spinner extends React.Component<Props> {
+  static defaultProps = {
+    block: false,
+    size: 40,
+  }
+
+  static propTypes = {
+    /** Color of the spinner */
+    color: PropTypes.string,
+    /** Size (diameter) of the spinner */
+    size: PropTypes.number,
+    /** Sets the display to block */
+    block: PropTypes.bool,
+  }
+
+  public render() {
     const { color, size, block } = this.props
 
     return (
@@ -65,20 +85,6 @@ class Spinner extends React.Component {
       </svg>
     )
   }
-}
-
-Spinner.propTypes = {
-  /** Color of the spinner */
-  color: PropTypes.string,
-  /** Size (diameter) of the spinner */
-  size: PropTypes.number,
-  /** Sets the display to block */
-  block: PropTypes.bool,
-}
-
-Spinner.defaultProps = {
-  block: false,
-  size: 40,
 }
 
 export default Spinner
