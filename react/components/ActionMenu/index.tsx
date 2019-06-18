@@ -16,7 +16,7 @@ interface Option {
 
 interface Props {
   align?: 'right' | 'left'
-  buttonProps?: React.ComponentProps<ButtonWithIcon>
+  buttonProps?: React.ComponentProps<typeof ButtonWithIcon>
   hideCaretIcon?: boolean
   // deprecated
   icon?: React.ReactNode

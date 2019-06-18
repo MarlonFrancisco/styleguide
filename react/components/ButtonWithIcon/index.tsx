@@ -1,16 +1,19 @@
-import React, { Component, forwardRef } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { Size } from 'styleguide-types'
 
-import Button from '../Button'
+import Button, { Props as ButtonProps} from '../Button'
 
 import { withForwardedRef, refShape } from '../../modules/withForwardedRef'
 
-interface Props {
+type IconPosition = 'left' | 'right'
+
+interface Props extends Omit<ButtonProps, 'icon'| 'ref'> {
   children?: React.ReactNode
-  forwardRef: React.Ref<Node>
+  forwardedRef: React.Ref<HTMLElement>
   icon?: React.ReactNode
-  iconPosition?: 'left' | 'right'
-  size?: 'small' | 'regular' | 'large'
+  iconPosition?: IconPosition
+  size?: Size
 }
 
 class ButtonWithIcon extends Component<Props> {
@@ -22,14 +25,14 @@ class ButtonWithIcon extends Component<Props> {
     /** The icon image */
     icon: PropTypes.node,
     /** Position of the icon */
-    iconPosition: PropTypes.oneOf(['left', 'right']),
+    iconPosition: PropTypes.oneOf<IconPosition>(['left', 'right']),
     /** @ignore Button size, used to calculate the margins of the icon.
      * It is then passed to the Button itself */
-    size: PropTypes.oneOf(['small', 'regular', 'large']),
+    size: PropTypes.oneOf<Size>(['small', 'regular', 'large']),
   }
 
   public static defaultProps = {
-    iconPosition: 'left',
+    iconPosition: 'left' as IconPosition,
   }
 
   public render() {
@@ -86,4 +89,4 @@ class ButtonWithIcon extends Component<Props> {
   }
 }
 
-export default withForwardedRef(ButtonWithIcon)
+export default withForwardedRef<Props>(ButtonWithIcon)

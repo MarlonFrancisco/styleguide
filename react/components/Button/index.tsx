@@ -6,6 +6,7 @@ import React, {
   HTMLAttributes,
 } from 'react'
 import PropTypes from 'prop-types'
+import { Size } from 'styleguide-types'
 
 import Spinner from '../Spinner'
 
@@ -26,13 +27,21 @@ type AnchorProps = Pick<
   'href' | 'target' | 'rel' | 'referrerPolicy' | 'download'
 >
 
-interface Props
+type Variations = 'primary'
+| 'secondary'
+| 'tertiary'
+| 'inverted-tertiary'
+| 'danger'
+| 'danger-tertiary'
+
+export interface Props
   extends React.DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
     AnchorProps,
     ButtonProps {
   block?: boolean
   collapseLeft?: boolean
   collapseRight?: boolean
+  forwardedRef: React.Ref<HTMLElement>
   icon?: boolean
   iconOnly?: boolean
   isActiveOfGroup?: boolean
@@ -40,25 +49,19 @@ interface Props
   isGrouped?: boolean
   isLastOfGroup?: boolean
   isLoading?: boolean
-  size?: 'small' | 'regular' | 'large'
-  variation?:
-    | 'primary'
-    | 'secondary'
-    | 'tertiary'
-    | 'inverted-tertiary'
-    | 'danger'
-    | 'danger-tertiary'
+  size?: Size
+  variation?: Variations
 }
 
 class Button extends Component<Props> {
   public static defaultProps = {
-    size: 'regular',
+    size: 'regular' as Size,
     block: false,
-    variation: 'primary',
+    variation: 'primary' as Variations,
     disabled: false,
     autoFocus: false,
     icon: false,
-    type: 'button',
+    type: 'button' as ButtonProps['type'],
     isLoading: false,
     isGrouped: false,
     isFirstOfGroup: false,
@@ -68,9 +71,9 @@ class Button extends Component<Props> {
 
   public static propTypes = {
     /** Button size  */
-    size: PropTypes.oneOf(['small', 'regular', 'large']),
+    size: PropTypes.oneOf<Size>(['small', 'regular', 'large']),
     /** Button prominence variation */
-    variation: PropTypes.oneOf([
+    variation: PropTypes.oneOf<Variations>([
       'primary',
       'secondary',
       'tertiary',
@@ -101,7 +104,7 @@ class Button extends Component<Props> {
     /** (Button spec attribute) */
     name: PropTypes.string,
     /** (Button spec attribute) */
-    type: PropTypes.string,
+    type: PropTypes.oneOf<ButtonProps['type']>(['button', 'reset', 'submit']),
     /** (Button spec attribute) */
     value: PropTypes.string,
     /** Label of the Button */
@@ -331,7 +334,7 @@ class Button extends Component<Props> {
       download,
     }
 
-    const Element = href ? 'a' : 'button'
+    const Element = href ? React.createFactory('a') : React.createFactory('button')
 
     return (
       <Element
@@ -363,7 +366,6 @@ class Button extends Component<Props> {
           <Fragment>
             <span className="top-0 left-0 w-100 h-100 absolute flex justify-center items-center">
               <Spinner
-                secondary={variation === 'primary' || variation === 'danger'}
                 size={loaderSize}
               />
             </span>
@@ -378,4 +380,4 @@ class Button extends Component<Props> {
   }
 }
 
-export default withForwardedRef(Button)
+export default withForwardedRef<Props>(Button)

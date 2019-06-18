@@ -1,17 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { IconProps } from 'styleguide-types'
 import { baseClassname } from '../icon/utils'
 
 const radius = 40
 const circ = 2 * radius * Math.PI
 
-interface Props {
-  color?: string
-  size?: number
-  block?: boolean
-}
-
-class Spinner extends React.Component<Props> {
+class Spinner extends React.Component<IconProps> {
   static defaultProps = {
     block: false,
     size: 40,
