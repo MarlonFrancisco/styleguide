@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
+import { IconProps } from 'styleguide-types'
 import { calcIconSize, baseClassname } from '../utils'
 
 const iconBase = {
@@ -7,10 +8,22 @@ const iconBase = {
   height: 14,
 }
 
-class Deny extends PureComponent {
-  render() {
+class Deny extends PureComponent<IconProps> {
+  public static defaultProps = {
+    color: 'currentColor',
+    size: 16,
+    block: false,
+  }
+
+  public static propTypes = {
+    color: PropTypes.string,
+    size: PropTypes.number,
+    block: PropTypes.bool,
+  }
+
+  public render() {
     const { color, size, block } = this.props
-    const newSize = calcIconSize(iconBase, size)
+    const newSize = calcIconSize(iconBase, size!)
 
     return (
       <svg
@@ -27,18 +40,6 @@ class Deny extends PureComponent {
       </svg>
     )
   }
-}
-
-Deny.defaultProps = {
-  color: 'currentColor',
-  size: 16,
-  block: false,
-}
-
-Deny.propTypes = {
-  color: PropTypes.string,
-  size: PropTypes.number,
-  block: PropTypes.bool,
 }
 
 export default Deny
