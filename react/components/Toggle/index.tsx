@@ -1,11 +1,43 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { Size } from 'styleguide-types'
 
 import DenyIcon from '../icon/Deny'
 import CheckIcon from '../icon/Check'
 
-class Toggle extends Component {
-  componentDidMount() {
+type SizesWithoutSmall = Exclude<Size, 'small'>
+
+const propTypes = {
+  checked: PropTypes.bool,
+  semantic: PropTypes.bool,
+  disabled: PropTypes.bool,
+  id: PropTypes.string,
+  label: PropTypes.string,
+  name: PropTypes.string,
+  onChange: PropTypes.func,
+  onClick: PropTypes.func,
+  size: PropTypes.oneOf<SizesWithoutSmall>(['regular', 'large']),
+  helpText: PropTypes.node,
+}
+
+type Props = PropTypes.InferProps<typeof propTypes>
+
+function identityOrUndefined<T>(a: T | null | undefined) {
+  return a == null ? undefined : a
+}
+
+class Toggle extends Component<Props> {
+  public static propTypes = propTypes
+  public static defaultProps = {
+    checked: false,
+    disabled: false,
+    semantic: false,
+    label: '',
+    size: 'regular' as SizesWithoutSmall,
+  }
+
+  public componentDidMount() {
+    // @ts-ignore: Deprecated props warning.
     if (this.props.size === 'small') {
       console.warn(
         'Toggle: value "small" for the prop "size" is deprecated—the default "regular" size is now equivalent to what the size "small" was previously.'
@@ -13,7 +45,7 @@ class Toggle extends Component {
     }
   }
 
-  render() {
+  public render() {
     const {
       semantic,
       disabled,
@@ -30,12 +62,12 @@ class Toggle extends Component {
     let iconDenyClasses = 'absolute flex justify-center '
     let iconCheckClasses = 'absolute flex justify-center '
 
-    let circleStyle = {
+    let circleStyle: React.CSSProperties = {
       boxShadow: disabled ? 'none' : '0 0 10px rgba(0,0,0,0.2)',
       transform: 'scale(0.8)',
       transition: 'all .1s ease-out',
     }
-    let iconStyle = {
+    let iconStyle: React.CSSProperties = {
       transition: 'left .1s ease-out, opacity .1s ease-in-out',
     }
 
@@ -86,7 +118,7 @@ class Toggle extends Component {
       circleClasses += 'bg-base '
     }
 
-    let style = {
+    let style: React.CSSProperties = {
       transition: 'background 100ms ease-out',
     }
 
@@ -145,7 +177,7 @@ class Toggle extends Component {
     iconStyle = { ...iconStyle, ...checkedStyle }
 
     return (
-      <label htmlFor={id}>
+      <label htmlFor={identityOrUndefined(id)}>
         <div
           className={`flex flex-row items-center relative ${!disabled &&
             'pointer'}`}>
@@ -163,14 +195,14 @@ class Toggle extends Component {
             )}
           </div>
           <input
-            id={id}
+            id={identityOrUndefined(id)}
             type="checkbox"
             className="h1 w1 absolute o-0"
-            disabled={disabled}
-            checked={checked}
-            name={this.props.name}
-            onClick={this.props.onClick}
-            onChange={this.props.onChange}
+            disabled={!!disabled}
+            checked={!!checked}
+            name={identityOrUndefined(this.props.name)}
+            onClick={identityOrUndefined(this.props.onClick)}
+            onChange={identityOrUndefined(this.props.onChange)}
             tabIndex={0}
           />
           {label && <span className={labelClass}>{label}</span>}
@@ -181,27 +213,6 @@ class Toggle extends Component {
       </label>
     )
   }
-}
-
-Toggle.defaultProps = {
-  checked: false,
-  disabled: false,
-  semantic: false,
-  label: '',
-  size: 'regular',
-}
-
-Toggle.propTypes = {
-  checked: PropTypes.bool,
-  semantic: PropTypes.bool,
-  disabled: PropTypes.bool,
-  id: PropTypes.string,
-  label: PropTypes.string,
-  name: PropTypes.string,
-  onChange: PropTypes.func,
-  onClick: PropTypes.func,
-  size: PropTypes.oneOf(['regular', 'large']),
-  helpText: PropTypes.node,
 }
 
 export default Toggle
