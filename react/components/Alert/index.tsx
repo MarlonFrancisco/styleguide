@@ -7,18 +7,43 @@ import CloseIcon from '../icon/Close'
 import Button from '../Button'
 import { withForwardedRef, refShape } from '../../modules/withForwardedRef'
 
-class Alert extends Component {
-  componentDidMount() {
+const propTypes = {
+  /** @ignore Forwarded Ref */
+  forwardedRef: refShape,
+  /** Style of the alert */
+  type: PropTypes.oneOf(['success', 'error', 'warning']).isRequired,
+  /** Content of the alert */
+  children: PropTypes.node.isRequired,
+  /** If this function is defined, a close icon will appear and this function will be called when alert is closed. */
+  onClose: PropTypes.func,
+  /** Time in ms to auto close the alert */
+  autoClose: PropTypes.number,
+  /** If this object is defined, an action button will appear on the right side of the alert. */
+  action: PropTypes.shape({
+    onClick: PropTypes.func.isRequired,
+    label: PropTypes.string.isRequired,
+  }),
+}
+
+interface Props extends PropTypes.InferProps<typeof propTypes> {
+
+}
+
+class Alert extends Component<Props> {
+  private timeout?: NodeJS.Timeout
+  public componentDidMount() {
     if (this.props.autoClose && this.props.onClose) {
       this.timeout = setTimeout(this.props.onClose, this.props.autoClose)
     }
   }
 
-  componentWillUnmount() {
-    clearTimeout(this.timeout)
+  public componentWillUnmount() {
+    if (this.timeout) {
+      clearTimeout(this.timeout)
+    }
   }
 
-  render() {
+  public render() {
     const { type, onClose, action, forwardedRef } = this.props
     const innerVerticalPadding = 'pv3'
     let classes = 'ph5 pv4 br2 '
@@ -26,7 +51,6 @@ class Alert extends Component {
     let Icon = 'div'
     let color = 'c-on-base'
     const handleActionClick = (action && action.onClick) || undefined
-    const displayAction = action && action.onClick && action.label
 
     switch (type) {
       case 'success': {
@@ -71,7 +95,7 @@ class Alert extends Component {
             </div>
           </div>
 
-          {displayAction && (
+          {action && action.onClick && action.label && (
             <div
               className={`flex flex-grow-1 justify-end ${innerVerticalPadding}`}>
               <div className="nt4-ns nb4">
@@ -95,24 +119,6 @@ class Alert extends Component {
       </div>
     )
   }
-}
-
-Alert.propTypes = {
-  /** @ignore Forwarded Ref */
-  forwardedRef: refShape,
-  /** Style of the alert */
-  type: PropTypes.oneOf(['success', 'error', 'warning']).isRequired,
-  /** Content of the alert */
-  children: PropTypes.node.isRequired,
-  /** If this function is defined, a close icon will appear and this function will be called when alert is closed. */
-  onClose: PropTypes.func,
-  /** Time in ms to auto close the alert */
-  autoClose: PropTypes.number,
-  /** If this object is defined, an action button will appear on the right side of the alert. */
-  action: PropTypes.shape({
-    onClick: PropTypes.func.isRequired,
-    label: PropTypes.string.isRequired,
-  }),
 }
 
 export default withForwardedRef(Alert)
