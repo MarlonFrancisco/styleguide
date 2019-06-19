@@ -380,4 +380,4 @@ class Button extends Component<Props> {
   }
 }
 
-export default withForwardedRef<Props>(Button)
+export default withForwardedRef(Button)

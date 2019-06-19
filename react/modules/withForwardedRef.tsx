@@ -15,11 +15,8 @@ export const refShape: any = PropTypes.oneOfType([
   }),
 ])
 
-type ForwardedRefProps<T = HTMLElement> = {
-  forwardedRef: React.Ref<T>
-}
 
-export function withForwardedRef<OriginalProps extends ForwardedRefProps>(Component: React.ComponentType<OriginalProps>) {
+export function withForwardedRef<OriginalProps extends {}>(Component: React.ComponentType<OriginalProps>) {
   const ComponentWithRef = React.forwardRef<typeof Component, OriginalProps>((props, ref) => {
     return <Component {...props} forwardedRef={ref} />
   })

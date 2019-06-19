@@ -89,4 +89,4 @@ class ButtonWithIcon extends Component<Props> {
   }
 }
 
-export default withForwardedRef<Props>(ButtonWithIcon)
+export default withForwardedRef(ButtonWithIcon)
