@@ -7,7 +7,7 @@ import Menu from '../Menu'
 
 interface Option {
   label: string
-  handleCallback: () => void
+  onClick: () => void
   toggle: {
     checked: boolean
     semantic: boolean
@@ -36,7 +36,7 @@ interface State {
 
 class ActionMenu extends Component<Props, State> {
   private container: React.RefObject<HTMLDivElement>
-  private menu: React.RefObject<Menu>
+  private menu: React.RefObject<HTMLElement | typeof Menu>
 
   public static defaultProps = {
     options: [],
@@ -122,7 +122,7 @@ class ActionMenu extends Component<Props, State> {
   }
 
   private isClickOutsideMenu = (target: React.MouseEvent['target']) =>
-    this.menu && this.menu.current && !this.menu.current.contains(target)
+    this.menu && this.menu.current && !(this.menu.current as HTMLElement).contains(target as Node)
 
   private isClickOutsideContainer = (target: React.MouseEvent['target']) =>
     this.container &&
@@ -167,7 +167,7 @@ class ActionMenu extends Component<Props, State> {
     return (
       <div ref={this.container}>
         <Menu
-          ref={this.menu}
+          ref={this.menu as React.RefObject<typeof Menu>}
           open={isMenuOpen}
           align={align}
           width={menuWidth}

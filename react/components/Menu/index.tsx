@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Overlay } from 'react-overlays'
+import { HorizontalAlignment } from 'styleguide-types'
 
 import Toggle from '../Toggle'
 
@@ -16,14 +17,65 @@ const DEFAULT_DOCUMENT_ELEMENT = {
   clientHeight: 0,
 }
 
-class Menu extends Component {
-  constructor(props) {
+const propTypes = {
+  /** The element which will open the menu--the menu will
+   * be positioned around this element */
+  children: PropTypes.node,
+  /** @ignore Forwarded Ref */
+  forwardedRef: refShape,
+  /** Menu visibility (default is false) */
+  open: PropTypes.bool,
+  /** Menu Box width (default is 292px) */
+  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  /** Menu options */
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      isDangerous: PropTypes.bool,
+      label: PropTypes.string,
+      onClick: PropTypes.func.isRequired,
+      /** whether option has inline toggle */
+      toggle: PropTypes.shape({
+        checked: PropTypes.bool,
+        semantic: PropTypes.bool,
+      }),
+    }).isRequired
+  ),
+  /** function to close the menu after clicking an option */
+  onClose: PropTypes.func,
+  /** Menu Box align (default is right) */
+  align: PropTypes.oneOf<HorizontalAlignment>(['right', 'left']),
+}
+
+interface Props extends PropTypes.InferProps<typeof propTypes> {
+  forwardedRef: React.RefObject<HTMLDivElement>
+}
+
+interface State {
+  hasCalculatedSize: boolean
+  isUpwards: boolean
+  isVisible: boolean
+  menuHeight: number
+  containerHeight: number
+}
+
+class Menu extends Component<Props, State> {
+  private containerElement: React.RefObject<HTMLDivElement>
+  private menuElement: React.RefObject<HTMLDivElement>
+  public static propTypes = propTypes
+
+  public static defaultProps = {
+    options: [],
+    align: 'right' as HorizontalAlignment,
+    open: false,
+  }
+
+  constructor(props: Props) {
     super(props)
     this.containerElement = React.createRef()
     this.menuElement = props.forwardedRef || React.createRef()
   }
 
-  state = {
+  public state = {
     hasCalculatedSize: false, // hides the menu while calculating its size and position
     isUpwards: false, // opens the menu from bottom to top, if it doesn't fit on the screen otherwise
     isVisible: false, // triggers the opening animation
@@ -61,7 +113,7 @@ class Menu extends Component {
 
     const initialMenuHeight = menuBounds.height
 
-    const itemHeight = initialMenuHeight / this.props.options.length
+    const itemHeight = initialMenuHeight / this.props.options!.length
 
     const isOutOfBounds =
       menuBounds.top + initialMenuHeight + containerHeight > window.innerHeight
@@ -97,7 +149,7 @@ class Menu extends Component {
     )
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     if (!prevProps.open && this.props.open) {
       this.updateMenu()
     }
@@ -122,9 +174,9 @@ class Menu extends Component {
     return (
       <div className="relative">
         <div ref={this.containerElement}>{children}</div>
-        <Overlay show={open}>
+        <Overlay show={!!open}>
           {() => {
-            const { top, left, right, height } = this.getContainerBounds()
+            const { top, left, right, height } = this.getContainerBounds() as DOMRect
 
             const {
               scrollTop,
@@ -163,7 +215,7 @@ class Menu extends Component {
                   <div
                     style={{ height: menuHeight || 'auto' }}
                     className={menuHeight ? 'overflow-auto' : ''}>
-                    {options.map((option, index) => (
+                    {options!.map((option, index) => (
                       <button
                         key={index}
                         className="flex justify-between items-center t-body ph6 h-regular pointer hover-bg-muted-5 ma0 bg-transparent bn w-100 tl"
@@ -201,38 +253,4 @@ class Menu extends Component {
   }
 }
 
-Menu.defaultProps = {
-  options: [],
-  align: 'right',
-  open: false,
-}
-
-Menu.propTypes = {
-  /** The element which will open the menu--the menu will
-   * be positioned around this element */
-  children: PropTypes.node,
-  /** @ignore Forwarded Ref */
-  forwardedRef: refShape,
-  /** Menu visibility (default is false) */
-  open: PropTypes.bool,
-  /** Menu Box width (default is 292px) */
-  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  /** Menu options */
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string,
-      onClick: PropTypes.func,
-      /** whether option has inline toggle */
-      toggle: PropTypes.shape({
-        checked: PropTypes.bool,
-        semantic: PropTypes.bool,
-      }),
-    })
-  ),
-  /** function to close the menu after clicking an option */
-  onClose: PropTypes.func,
-  /** Menu Box align (default is right) */
-  align: PropTypes.oneOf(['right', 'left']),
-}
-
-export default withForwardedRef(Menu)
+export default withForwardedRef<Props>(Menu)
