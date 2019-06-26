@@ -8,4 +8,7 @@ declare module 'styleguide-types' {
     block?: boolean
   }
 
+  interface SolidIconProps extends IconProps {
+    solid?: boolean
+  }
 }
