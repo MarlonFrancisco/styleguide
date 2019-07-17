@@ -67,7 +67,7 @@ class Select extends Component {
     const reactSelectComponentProps = {
       ref: forwardedRef,
       autoFocus,
-      className: `pointer b--danger bw1 ${getFontClassNameFromSize(size)} ${
+      className: `b--danger bw1 ${getFontClassNameFromSize(size)} ${
         errorMessage ? 'b--danger bw1' : ''
       }`,
       components: {
