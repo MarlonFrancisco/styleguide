@@ -59,6 +59,7 @@ class Select extends Component {
       options,
       placeholder,
       size,
+      transparentBorder,
       value,
       valuesMaxHeight,
       clearable,
@@ -115,9 +116,24 @@ class Select extends Component {
         control: style => {
           const errorStyle = errorMessage ? { borderColor: COLORS.red } : {}
 
+          const transparentBorderStyle = {
+            borderColor: 'transparent',
+            boxShadow: 'none',
+            '&:active': {
+              borderColor: 'transparent',
+            },
+            '&:focus': {
+              borderColor: 'transparent',
+            },
+            '&:hover': {
+              borderColor: 'transparent',
+            },
+          }
+
           return {
             ...style,
             ...errorStyle,
+            ...(transparentBorder === true && transparentBorderStyle),
             borderWidth: '.125rem',
           }
         },
@@ -210,6 +226,7 @@ Select.defaultProps = {
   multi: true,
   placeholder: 'Select...',
   size: 'regular',
+  transparentBorder: false,
   clearable: true,
 }
 
@@ -276,6 +293,8 @@ Select.propTypes = {
   placeholder: PropTypes.string,
   /** Select size */
   size: PropTypes.oneOf(['small', 'regular', 'large']),
+  /** Whether or not the border should be transparent. */
+  transparentBorder: PropTypes.bool,
   /** Value of the select. */
   value: PropTypes.oneOfType([
     PropTypes.shape({

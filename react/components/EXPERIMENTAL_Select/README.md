@@ -312,3 +312,29 @@ const ref = React.createRef()
   </div>
 </div>
 ```
+
+Transparent border
+
+```js
+const options = [
+  {
+    value: 'first-option',
+    label: 'First Option',
+  },
+  {
+    value: 'second-option',
+    label: 'Second Option',
+  },
+]
+
+;<div>
+  <Select
+    label="Label"
+    options={options}
+    onChange={values => {
+      console.log(`[Select] Selected: ${JSON.stringify(values, null, 2)}`)
+    }}
+    transparentBorder
+  />
+</div>
+```
