@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- **EXPERIMENTAL_Select** Transparent border option.
+
+### Changed
+
+- **EXPERIMENTAL_Select** Option groups' styles.
+
+### Fixed
+
+- **EXPERIMENTAL_Select** `options` prop type.
+- **EXPERIMENTAL_Select** Remove `pointer` class from top level.
+
 ## [8.66.0] - 2019-07-18
 
 ### Added
