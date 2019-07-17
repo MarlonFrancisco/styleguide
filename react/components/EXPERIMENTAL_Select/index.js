@@ -121,6 +121,20 @@ class Select extends Component {
             borderWidth: '.125rem',
           }
         },
+        group: (style, { label }) => ({
+          ...style,
+          ...(options.length > 0 &&
+            label !== options[options.length - 1].label && {
+              borderBottom: `1px solid ${COLORS['muted-4']}`,
+            }),
+        }),
+        groupHeading: style => ({
+          ...style,
+          color: COLORS['muted-2'],
+          fontSize: '90%',
+          fontWeight: 400,
+          marginBottom: '0.6em',
+        }),
         menu: style => ({ ...style, marginTop: 0 }),
         multiValue: (style, state) => ({
           ...style,
@@ -230,15 +244,33 @@ Select.propTypes = {
   onChange: PropTypes.func.isRequired,
   /** Handle events on search input */
   onSearchInputChange: PropTypes.func,
-  /** Array of options. Options have the shape { label, value }. */
+  /** Array of options, which may or may not be grouped. */
   options: PropTypes.arrayOf(
-    PropTypes.shape({
-      /** Text that gets rendered for the option. */
-      label: PropTypes.string.isRequired,
-      /** Underlying value, e.g., an id. */
-      value: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
-        .isRequired,
-    })
+    PropTypes.oneOfType([
+      /** Normal options. */
+      PropTypes.shape({
+        /** Text that gets rendered for the option. */
+        label: PropTypes.string.isRequired,
+        /** Underlying value, e.g., an id. */
+        value: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+          .isRequired,
+      }),
+      /** Grouped options. */
+      PropTypes.shape({
+        /** Group label. */
+        label: PropTypes.string.isRequired,
+        /** Group options. */
+        options: PropTypes.arrayOf(
+          PropTypes.shape({
+            /** Text that gets rendered for the option. */
+            label: PropTypes.string.isRequired,
+            /** Underlying value, e.g., an id. */
+            value: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+              .isRequired,
+          }).isRequired
+        ),
+      }),
+    ])
   ),
   /** Text for the select value.  */
   placeholder: PropTypes.string,

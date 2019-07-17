@@ -168,6 +168,50 @@ const options = [
 </div>
 ```
 
+With grouped options
+
+```js
+const options = [
+  {
+    label: 'First group',
+    options: [
+      {
+        label: 'First Option of the First Group',
+        value: 'first-group-first-option',
+      },
+      {
+        label: 'Second Option of the First Group',
+        value: 'first-group-second-option',
+      },
+    ],
+  },
+  {
+    label: 'Second group',
+    options: [
+      {
+        label: 'First Option of the Second Group',
+        value: 'second-group-first-option',
+      },
+      {
+        label: 'Second Option of the Second Group',
+        value: 'second-group-second-option',
+      },
+    ],
+  },
+]
+
+;<div>
+  <Select
+    label="Label"
+    multi={true}
+    onChange={values => {
+      console.log(`[Select] Selected: ${JSON.stringify(values, null, 2)}`)
+    }}
+    options={options}
+  />
+</div>
+```
+
 Disabled
 
 ```js
