@@ -2,21 +2,46 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import reduce from 'lodash/reduce'
 import map from 'lodash/map'
+import isEqual from 'lodash/isEqual'
 
 import Box from '../Box'
 import Pagination from '../Pagination'
 import EmptyState from '../EmptyState'
 import FilterBar from '../FilterBar'
+import Totalizers from '../Totalizer'
+import IconCaretDown from '../icon/CaretDown'
+import IconCaretUp from '../icon/CaretUp'
 
 import SimpleTable from './SimpleTable'
 import Toolbar from './Toolbar'
 import CheckboxContainer from './CheckboxContainer'
-import Totalizers from '../Totalizer'
 import BulkActions from './BulkActions'
 
-const TABLE_HEADER_HEIGHT = 36
-const EMPTY_STATE_SIZE_IN_ROWS = 5
 const DEFAULT_SCROLLBAR_WIDTH = 17
+
+const toggleOpened = (items, item) =>
+  items.map(data => ({
+    ...data,
+    opened: isEqual(data, item) ? !data.opened : data.opened,
+    subItems: !data.subItems
+      ? data.subItems
+      : isEqual(data, item) // Micro optimization to prevent going down
+      ? data.subItems
+      : toggleOpened(data.subItems, item),
+  }))
+
+const processSubItems = (items = [], parent = null, opened = false) =>
+  items.map(item => ({
+    parent,
+    opened,
+    ...item,
+    subItems:
+      item.subItems &&
+      processSubItems(item.subItems, { ...item, parent }, opened),
+  }))
+
+const hasSubItems = items =>
+  items.some(item => item.subItems && item.subItems.length)
 
 class Table extends PureComponent {
   constructor(props) {
@@ -28,6 +53,133 @@ class Table extends PureComponent {
       allChecked: false,
       selectedRows: [],
       allLinesSelected: false,
+      items: props.items,
+      schema: props.schema,
+    }
+  }
+
+  componentDidMount = () => {
+    this.processItems()
+    this.processSchema()
+  }
+
+  componentDidUpdate = prevProps => {
+    if (!isEqual(prevProps.items, this.props.items)) {
+      this.processItems()
+    }
+    if (!isEqual(prevProps.schema, this.props.schema)) {
+      this.processSchema()
+    }
+  }
+
+  hasBulkActions = () => {
+    const { bulkActions } = this.props
+    const hasPrimaryBulkAction =
+      bulkActions &&
+      bulkActions.main &&
+      typeof bulkActions.main.handleCallback === 'function'
+    const hasSecondaryBulkActions =
+      bulkActions.others && bulkActions.others.length > 0
+    return hasPrimaryBulkAction || hasSecondaryBulkActions
+  }
+
+  processSchema = () => {
+    const { schema, items } = this.props
+
+    if (this.hasBulkActions()) {
+      schema.properties = {
+        bulk: {
+          width: 40,
+          tabbable: true,
+          headerRenderer: () => {
+            const { selectedRows } = this.state
+            const selectedRowsLength = selectedRows.length
+            const itemsLength = this.props.items.length
+
+            const isChecked = selectedRowsLength === itemsLength
+            const isPartial =
+              selectedRowsLength > 0 && selectedRowsLength < itemsLength
+
+            return (
+              <CheckboxContainer
+                checked={isChecked}
+                onClick={this.handleSelectAllVisibleLines}
+                id="all"
+                partial={isPartial}
+              />
+            )
+          },
+          cellRenderer: ({ rowData }) => (
+            <CheckboxContainer
+              checked={this.state.selectedRows.some(
+                row => row.id === rowData.id
+              )}
+              onClick={() => this.handleSelectLine(rowData)}
+              id={rowData.id}
+              disabled={this.state.allLinesSelected}
+            />
+          ),
+        },
+        ...schema.properties,
+      }
+    }
+
+    if (hasSubItems(items)) {
+      schema.properties = {
+        collapsible: {
+          width: 40,
+          tabbable: true,
+          headerRenderer: () => null,
+          cellRenderer: ({ rowData }) =>
+            !rowData.subItems ? null : (
+              <div
+                className="c-link pointer"
+                onClick={() =>
+                  this.setState({
+                    items: toggleOpened(this.state.items, rowData),
+                  })
+                }>
+                {rowData.opened ? <IconCaretUp /> : <IconCaretDown />}
+              </div>
+            ),
+        },
+        ...schema.properties,
+      }
+    }
+
+    this.setState({ schema })
+  }
+
+  processItems = () => {
+    const { items } = this.props
+    let stateItems = items
+
+    if (this.hasBulkActions()) {
+      stateItems = items.map((item, i) => ({
+        ...item,
+        id: i,
+      }))
+    }
+
+    if (hasSubItems(items)) {
+      stateItems = processSubItems(stateItems)
+    }
+
+    this.setState({ items: stateItems })
+  }
+
+  toggleSubItems = itemIndex => {
+    if (itemIndex !== -1) {
+      this.setState({
+        items: this.state.items.map((data, index) =>
+          index !== itemIndex
+            ? data
+            : {
+                ...data,
+                opened: !data.opened,
+              }
+        ),
+      })
     }
   }
 
@@ -89,17 +241,6 @@ class Table extends PureComponent {
     return isNaN(scrollbarWidth) ? DEFAULT_SCROLLBAR_WIDTH : scrollbarWidth
   }
 
-  calculateTableHeight = totalItems => {
-    const { tableRowHeight } = this.state
-    const multiplicator =
-      totalItems !== 0 ? totalItems : EMPTY_STATE_SIZE_IN_ROWS
-    return (
-      TABLE_HEADER_HEIGHT +
-      tableRowHeight * multiplicator +
-      this.getScrollbarWidth()
-    )
-  }
-
   handleSelectionChange = () => {
     if (this.props.bulkActions && this.props.bulkActions.onChange) {
       const selectedParameters = this.state.allLinesSelected
@@ -151,8 +292,6 @@ class Table extends PureComponent {
 
   render() {
     const {
-      items,
-      schema,
       disableHeader,
       emptyStateLabel,
       emptyStateChildren,
@@ -172,59 +311,14 @@ class Table extends PureComponent {
       filters,
     } = this.props
     const {
+      items,
+      schema,
       hiddenFields,
       tableRowHeight,
       selectedDensity,
       selectedRows,
       allLinesSelected,
     } = this.state
-
-    const hasPrimaryBulkAction =
-      bulkActions &&
-      bulkActions.main &&
-      typeof bulkActions.main.handleCallback === 'function'
-    const hasSecondaryBulkActions =
-      bulkActions.others && bulkActions.others.length > 0
-    const hasBulkActions = hasPrimaryBulkAction || hasSecondaryBulkActions
-
-    if (hasBulkActions) {
-      schema.properties = {
-        bulk: {
-          width: 40,
-          headerRenderer: () => {
-            const { selectedRows } = this.state
-            const selectedRowsLength = selectedRows.length
-            const itemsLength = this.props.items.length
-
-            const isChecked = selectedRowsLength === itemsLength
-            const isPartial =
-              selectedRowsLength > 0 && selectedRowsLength < itemsLength
-
-            return (
-              <CheckboxContainer
-                checked={isChecked}
-                onClick={this.handleSelectAllVisibleLines}
-                id="all"
-                partial={isPartial}
-              />
-            )
-          },
-          cellRenderer: ({ rowData }) => (
-            <CheckboxContainer
-              checked={this.state.selectedRows.some(
-                row => row.id === rowData.id
-              )}
-              onClick={() => this.handleSelectLine(rowData)}
-              id={rowData.id}
-              disabled={this.state.allLinesSelected}
-            />
-          ),
-        },
-        ...schema.properties,
-      }
-
-      items.map((item, i) => (item.id = i))
-    }
 
     const properties = Object.keys(schema.properties)
     const emptyState = !!(
@@ -248,7 +342,7 @@ class Table extends PureComponent {
     // if pagination and bulk actions features are active at the same time
     // when paginating, bulk actions active lines should be deselected
     const paginationClone = pagination ? Object.assign({}, pagination) : null
-    if (paginationClone && hasBulkActions) {
+    if (paginationClone && this.hasBulkActions()) {
       paginationClone.onNextClick = () => {
         this.handleDeselectAllLines()
         pagination.onNextClick()
@@ -258,6 +352,12 @@ class Table extends PureComponent {
         pagination.onPrevClick()
       }
     }
+    const hasPrimaryBulkAction =
+      bulkActions &&
+      bulkActions.main &&
+      typeof bulkActions.main.handleCallback === 'function'
+    const hasSecondaryBulkActions =
+      bulkActions.others && bulkActions.others.length > 0
 
     return (
       <div className="vtex-table__container">
@@ -320,9 +420,7 @@ class Table extends PureComponent {
             updateTableKey={updateTableKey}
             lineActions={lineActions}
             loading={loading}
-            containerHeight={
-              containerHeight || this.calculateTableHeight(items.length)
-            }
+            containerHeight={containerHeight}
             selectedRowsIndexes={map(selectedRows, 'id')}
             density={selectedDensity}
           />

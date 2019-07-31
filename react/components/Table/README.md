@@ -1369,6 +1369,113 @@ const defaultSchema = {
 </div>
 ```
 
+##### Sub Items
+
+Have subitems
+
+```js
+const itemsCopy = [
+  {
+    email: 'olen.stamm21@yahoo.com',
+    name: 'Patrick Rothfuss',
+    number: 1.52725,
+    subItems: [
+      {
+        email: 'subolen.stamm21@yahoo.com',
+        name: 'Sub Patrick Rothfuss',
+        number: 1.52725,
+        subItems: [
+          {
+            email: 'subjudd_gulgowski22@yahoo.com',
+            name: 'Sub Tom Braddy',
+            number: 4.10182,
+          },
+        ],
+      },
+      {
+        email: 'subjunius0@gmail.com',
+        name: 'Sub Hurricane Skywalker IV',
+        number: 2.84639,
+      },
+    ],
+  },
+  {
+    email: 'junius0@gmail.com',
+    name: 'Hurricane Skywalker IV',
+    number: 2.84639,
+  },
+  {
+    email: 'judd_gulgowski22@yahoo.com',
+    name: 'Tom Braddy',
+    number: 4.10182,
+  },
+  {
+    email: 'catharine.leuschke62@hotmail.com',
+    name: 'Momochi Zabuza',
+    number: 6.33245,
+  },
+  {
+    email: 'candido_ryan@hotmail.com',
+    name: 'Freddie Mercury',
+    number: 7.96637,
+  },
+]
+const defaultSchema = {
+  properties: {
+    name: {
+      type: 'string',
+      title: 'Name',
+      tabbable: true,
+    },
+    email: {
+      type: 'string',
+      title: 'Email',
+    },
+    number: {
+      type: 'number',
+      title: 'Number',
+    },
+  },
+}
+
+;<div className="mb5">
+  <Table
+    fullWidth
+    schema={defaultSchema}
+    items={itemsCopy}
+    density="high"
+    bulkActions={{
+      texts: {
+        secondaryActionsLabel: 'Actions',
+        rowsSelected: qty => (
+          <React.Fragment>Selected rows: {qty}</React.Fragment>
+        ),
+        selectAll: 'Select all',
+        allRowsSelected: qty => (
+          <React.Fragment>All rows selected: {qty}</React.Fragment>
+        ),
+      },
+      totalItems: 122,
+      onChange: params => console.log(params),
+      main: {
+        label: 'Main Action',
+        handleCallback: params => console.log(params),
+      },
+      others: [
+        {
+          label: 'Action 1',
+          handleCallback: params => console.log(params),
+        },
+        {
+          label: 'Action 2',
+          handleCallback: params => console.log(params),
+        },
+      ],
+    }}
+  />
+</div>
+```
+
 ##### Full blown example
 
 With Toolbar, Totalizers, Pagination and Filters
