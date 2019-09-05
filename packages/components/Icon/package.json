@@ -1,0 +1,13 @@
+{
+	"name": "@vtex/icon",
+	"version": "1.0.0",
+	"license": "MIT",
+	"dependencies": {},
+	"peerDependencies": {
+		"react": "^16.9.0",
+		"prop-types": "^15.7.2"
+	},
+	"devDependencies": {
+		"react": "^16.9.0"
+	}
+}
