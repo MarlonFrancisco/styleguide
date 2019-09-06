@@ -1,0 +1,24 @@
+{
+  "name": "@vtex/color-picker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "module": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "../../../scripts/build-babel-dir.sh src/ ./"
+  },
+  "dependencies": {
+    "@vtex/dropdown": "^1.0.0",
+    "@vtex/input": "^1.0.0",
+    "react-color": "^2.17.3",
+    "react-outside-click-handler": "^1.2.4"
+  },
+  "peerDependencies": {
+    "prop-types": "^15.7.2",
+    "react": "^16.9.0"
+  },
+  "devDependencies": {
+    "prop-types": "^15.7.2",
+    "react": "^16.9.0"
+  }
+}

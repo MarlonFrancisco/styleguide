@@ -1,0 +1,21 @@
+{
+  "name": "@vtex/input",
+  "version": "1.0.0",
+  "main": "index.js",
+  "module": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "../../../scripts/build-babel-dir.sh src/ ./"
+  },
+  "dependencies": {
+    "@vtex/hocs": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react": "^16.9.0",
+    "prop-types": "^15.7.2"
+  },
+  "devDependencies": {
+    "react": "^16.9.0",
+    "prop-types": "^15.7.2"
+  }
+}
