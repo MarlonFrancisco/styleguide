@@ -1,9 +1,10 @@
 {
-  "name": "@vtex/icon",
+  "name": "@vtex/box",
   "version": "1.0.0",
+  "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "../../../scripts/build-babel-dir.sh src/ ./"
+    "build": "../../../scripts/build-babel-entry.sh src/index.tsx ./"
   },
   "dependencies": {},
   "peerDependencies": {
@@ -11,6 +12,7 @@
     "prop-types": "^15.7.2"
   },
   "devDependencies": {
-    "react": "^16.9.0"
+    "react": "^16.9.0",
+    "prop-types": "^15.7.2"
   }
 }

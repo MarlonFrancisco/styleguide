@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import { calcIconSize, baseClassname } from '../utils'
+import { calcIconSize, baseClassname } from './utils'
 
 const iconBase = {
   width: 16,
