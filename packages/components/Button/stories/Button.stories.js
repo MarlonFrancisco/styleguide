@@ -2,7 +2,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { text, boolean } from '@storybook/addon-knobs'
 
-import Button from '../index.js'
+import Button from '../src/index.js/index.js'
 
 storiesOf('Button', module)
   .add('with text', () => (

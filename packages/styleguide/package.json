@@ -1,14 +1,17 @@
 {
-  "name": "@vtex/icon",
+  "name": "@vtex/styleguide",
   "version": "1.0.0",
   "license": "MIT",
-  "scripts": {
-    "build": "../../../scripts/build-babel-dir.sh src/ ."
+  "dependencies": {
+    "@vtex/box": "^1.0.0",
+    "@vtex/button": "^1.0.0",
+    "@vtex/hocs": "^1.0.0",
+    "@vtex/icon": "^1.0.0",
+    "@vtex/spinner": "^1.0.0"
   },
-  "dependencies": {},
   "peerDependencies": {
-    "react": "^16.9.0",
-    "prop-types": "^15.7.2"
+    "prop-types": "^15.7.2",
+    "react": "^16.9.0"
   },
   "devDependencies": {
     "react": "^16.9.0"
