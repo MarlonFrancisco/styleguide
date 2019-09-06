@@ -1,9 +1,11 @@
-import { configure, addDecorator } from '@storybook/react'
+import { configure, addDecorator, addParameters } from '@storybook/react'
 import { withA11y } from '@storybook/addon-a11y'
 import { withInfo } from '@storybook/addon-info'
 import { withKnobs } from '@storybook/addon-knobs'
-
 import 'vtex-tachyons'
+
+import theme from './theme.js'
+import './iframe-style.css'
 
 addDecorator(withA11y)
 
@@ -22,6 +24,10 @@ addDecorator(
     // inline: true
   })
 )
+
+addParameters({
+  options: { theme },
+})
 
 // automatically import all files ending in *.stories.js
 const req = require.context(

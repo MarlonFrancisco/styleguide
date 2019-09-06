@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "build": "../../../scripts/build-babel-entry.sh src/index.js ./"
+  },
   "peerDependencies": {
     "prop-types": "^15.7.2",
     "react": "^16.9.0"

@@ -1,7 +1,7 @@
 {
   "name": "@vtex/box",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "index.js",
   "license": "MIT",
   "scripts": {
     "build": "../../../scripts/build-babel-entry.sh src/index.tsx ./"

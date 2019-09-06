@@ -4,6 +4,9 @@
   "main": "index.js",
   "module": "index.js",
   "license": "MIT",
+  "scripts": {
+    "build": "../../../scripts/build-babel-entry.sh src/index.js ./"
+  },
   "dependencies": {
     "@vtex/icon": "^1.0.0"
   },
