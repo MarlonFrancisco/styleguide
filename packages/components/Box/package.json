@@ -6,6 +6,9 @@
   "scripts": {
     "build": "../../../scripts/build-babel-entry.sh src/index.tsx ./"
   },
+  "files": [
+    "*.js"
+  ],
   "dependencies": {},
   "peerDependencies": {
     "react": "^16.9.0",

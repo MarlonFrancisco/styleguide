@@ -7,6 +7,10 @@
   "scripts": {
     "build": "../../../scripts/build-babel-dir.sh src/ ./"
   },
+  "files": [
+    "*.js",
+    "*.css"
+  ],
   "dependencies": {
     "@vtex/hocs": "^1.0.0"
   },

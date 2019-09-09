@@ -12,7 +12,7 @@
     "storybook:build": "build-storybook",
     "clean": "lerna clean",
     "bootstrap": "lerna bootstrap",
-    "lint": "eslint --quiet --fix packages/components/*/src/**/*.js",
+    "lint": "eslint --quiet --fix --ext js --ext tsx packages/components/*/src packages/styleguide",
     "postinstall": "yarn run bootstrap"
   },
   "dependencies": {

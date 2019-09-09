@@ -6,6 +6,9 @@
   "scripts": {
     "build": "../../../scripts/build-babel-entry.sh src/index.js ./"
   },
+  "files": [
+    "*.js"
+  ],
   "peerDependencies": {
     "prop-types": "^15.7.2",
     "react": "^16.9.0"

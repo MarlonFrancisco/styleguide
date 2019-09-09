@@ -38,3 +38,4 @@ lerna-debug.log*
 packages/**/dist/
 packages/components/*/*.js
 packages/components/*/*.css
+packages/hocs/*.js

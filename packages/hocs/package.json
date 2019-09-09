@@ -1,5 +1,15 @@
 {
   "name": "@vtex/hocs",
   "version": "1.0.0",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "../../scripts/build-babel-dir.sh src/ ./"
+  },
+  "files": [
+    "*.js"
+  ],
+  "peerDependencies": {
+    "react": "^16.9.0",
+    "prop-types": "^15.7.2"
+  }
 }

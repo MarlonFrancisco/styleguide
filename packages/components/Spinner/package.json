@@ -7,6 +7,9 @@
   "scripts": {
     "build": "../../../scripts/build-babel-entry.sh src/index.js ./"
   },
+  "files": [
+    "*.js"
+  ],
   "dependencies": {
     "@vtex/icon": "^1.0.0"
   },

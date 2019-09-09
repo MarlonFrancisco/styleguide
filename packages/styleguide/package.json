@@ -2,11 +2,20 @@
   "name": "@vtex/styleguide",
   "version": "1.0.0",
   "license": "MIT",
+  "scripts": {
+    "build": "../../scripts/build-babel-dir.sh react/components lib/"
+  },
+  "files": [
+    "/lib"
+  ],
   "dependencies": {
     "@vtex/box": "^1.0.0",
     "@vtex/button": "^1.0.0",
     "@vtex/hocs": "^1.0.0",
     "@vtex/icon": "^1.0.0",
+    "@vtex/input": "^1.0.0",
+    "@vtex/dropdown": "^1.0.0",
+    "@vtex/color-picker": "^1.0.0",
     "@vtex/spinner": "^1.0.0"
   },
   "peerDependencies": {
