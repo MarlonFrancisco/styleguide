@@ -18,6 +18,7 @@ class Checkbox extends PureComponent {
       required,
       value,
       partial,
+      size,
     } = this.props
 
     return (
@@ -82,7 +83,8 @@ class Checkbox extends PureComponent {
           <label
             className={classNames(
               { 'c-disabled': disabled },
-              { 'c-on-base pointer': !disabled }
+              { 'c-on-base pointer': !disabled },
+              { 't-small': size === 'small' }
             )}
             htmlFor={id}>
             {label}
@@ -119,6 +121,8 @@ Checkbox.propTypes = {
   value: PropTypes.string,
   /** Partial state */
   partial: PropTypes.bool,
+  /** Label size */
+  size: PropTypes.oneOf(['small']),
 }
 
 export default Checkbox
