@@ -9,6 +9,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
   TooltipFormatter,
+  LineType,
 } from 'recharts'
 import PropTypes from 'prop-types'
 import { colors, tooltipProps } from './constants'
@@ -25,7 +26,7 @@ interface Props {
 
 const renderLine = (lineConfigs, key, color) =>(
   <Line
-    key={key}
+    key={`${key}--${uuid()}`}
     dataKey={key}
     stroke={color}
     {...lineConfigs}
