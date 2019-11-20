@@ -11,18 +11,15 @@ import {
   TooltipFormatter,
 } from 'recharts'
 import PropTypes from 'prop-types'
-import { colors, tooltipProps } from './constants'
-import { getChartDefaultProps, getLineDefaultProps }from '../helpers'
+import { tooltipProps } from './constants'
+import { getChartDefaultProps } from '../helpers'
+import getLineDefaultProps from './helpers'
+import uuid from 'uuid'
+import { colors } from '../commonProps'
 
 interface Props {
-  data: any,
-  dataKeys: string[],
-  xAxisKey: string,
-  config: ChartProps,
   tooltipFormatter: TooltipFormatter,
-  lineProps: LineProps,
-  xAxisFormatter: Function | FC,
-  yAxisFormatter: Function | FC
+  lineProps: LineProps
 }
 
 const renderLine = (lineConfigs, key, color) =>(
@@ -34,8 +31,7 @@ const renderLine = (lineConfigs, key, color) =>(
   />
 )
 
-
-const LineChart: FC<Props> = ({
+const LineChart: FC<Props & BaseChartProps> = ({
   data,
   dataKeys,
   xAxisKey,
@@ -102,12 +98,6 @@ LineChart.propTypes = {
 
   /** The interpolation defines how data points should be connected when creating a path.*/
   lineProps: PropTypes.object,
-
-  /** If ReactElement set, the option can be the custom label element. If set a function, the function will be called to render customized label. */
-  xAxisFormatter: PropTypes.func,
-
-  /**If ReactElement set, the option can be the custom label element. If set a function, the function will be called to render customized label. */
-  yAxisFormatter: PropTypes.func
 }
   
 export default LineChart
