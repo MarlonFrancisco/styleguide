@@ -3,6 +3,7 @@ type BaseXAxisProps = Pick<XAxisProps, 'axisLine' | 'tickLine' | 'padding' | 'ti
 type BaseYAxisProps = Pick<YAxisProps, 'axisLine' | 'tickLine' | 'padding' | 'tick' | 'hide'>
 type BaseContainerProps = Pick<ResponsiveContainerProps, 'height' | 'width'>
 type DefaultLineProps = Pick<LineProps, 'type' | 'strokeWidth' | 'dot'>
+type DefaultBarProps = Pick<LineProps, 'layout'>
 
 type ChartSchema = {
   xAxis?: BaseAxisProps,
@@ -15,7 +16,12 @@ type BaseChartProps = {
   data: any,
   dataKeys: string[],
   xAxisKey: string,
+<<<<<<< HEAD
   config: ChartSchema
+=======
+  yAxisKey: string,
+  schema: ChartSchema
+>>>>>>> Add default config for barchart
 }
 
 type LineProps = {

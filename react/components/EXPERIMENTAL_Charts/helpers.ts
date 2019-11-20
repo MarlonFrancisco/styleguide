@@ -12,7 +12,7 @@ const getChartDefaultProps = (userProps: ChartProps)  => {
   return { configs: props }
 =======
 const getDefaultProps = (userProps: ChartSchema)  => {
-    const configs: ChartSchema = {...commonDefaultProps, ...userProps}
+    const configs = {...commonDefaultProps, ...userProps}
     return { configs }
 >>>>>>> Fix some problems
 }

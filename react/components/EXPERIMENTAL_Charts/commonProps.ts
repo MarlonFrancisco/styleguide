@@ -9,14 +9,18 @@ export const commonDefaultProps = {
     tickLine: false,
     tick: true,
     tickMargin: 15,
-    hide: false
+    hide: false,
+    type: 'category',
+    padding: { left: 10, right: 10 }
   },
   yAxis: {
     axisLine: false,
     tickLine: false,
     tick: true,
     tickMargin: 10,
-    hide: false
+    hide: false,
+    type: 'number',
+    padding: { top: 10, bottom: 10 }
   },
   grid: {
     horizontal: false,
