@@ -11,13 +11,17 @@ type ChartSchema = {
   grid?: BaseGridProps
 }
 
-type LineProps = {
-  type?: LineType
-}
-
 type BaseChartProps = {
   data: any,
   dataKeys: string[],
   xAxisKey: string,
   config: ChartSchema
+}
+
+type LineProps = {
+  type?: LineType
+}
+
+type BarProps = {
+  layout?: LayoutType 
 }
