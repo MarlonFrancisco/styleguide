@@ -12,18 +12,12 @@ type ChartSchema = {
   grid?: BaseGridProps
 }
 
-type AxisKey = 'number' | 'category'
 
 type BaseChartProps = {
   data: any,
   dataKeys: string[],
   xAxisKey: string,
-<<<<<<< HEAD
   config: ChartSchema
-=======
-  yAxisKey: string,
-  schema: ChartSchema
->>>>>>> Add default config for barchart
 }
 
 type LineProps = {
