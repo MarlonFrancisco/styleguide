@@ -63,7 +63,7 @@ LineChart.propTypes = {
   dataKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
 
   /** The key of x-axis which is corresponding to the data. */
-  xAxisKey: PropTypes.string.isRequired,
+  xAxisKey: PropTypes.oneOf(['number', 'category']),
   
   /** The formatter function of value in tooltip. If you return an array, the first entry will be the formatted "value", and the second entry will be the formatted "key" */
   tooltipFormatter: PropTypes.func,

@@ -12,6 +12,8 @@ type ChartSchema = {
   grid?: BaseGridProps
 }
 
+type AxisKey = 'number' | 'category'
+
 type BaseChartProps = {
   data: any,
   dataKeys: string[],
