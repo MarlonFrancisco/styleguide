@@ -27,7 +27,6 @@
 from the data to the axis.
 - Use axis labels clearly and concise, so, you might be want to abbreviate sometimes.
 
-
 ### 👎 Don'ts
 -  Avoid spaghetti chart(don't use more than 4 lines)
 ```jsx noeditor
