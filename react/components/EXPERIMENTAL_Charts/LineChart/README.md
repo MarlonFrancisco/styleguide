@@ -1,7 +1,7 @@
 #### The line chart shows the data as a data points connected by a line. They are useful to analyze changes over the time, comparisons, and trends.
 
 ```js
-  const sampleData = require('./sampleData').default;
+  const sampleData = require('../sampleData').default;
   const keys = ['customers', 'orders', 'totalSpent'];
   const mapper = {
     'customers': 'Customers',
