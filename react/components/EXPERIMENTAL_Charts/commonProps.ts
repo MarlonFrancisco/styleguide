@@ -20,7 +20,6 @@ export const commonDefaultProps: ChartSchema = {
     tickMargin: 10,
     hide: false,
     type: 'number',
-    padding: { top: 10, bottom: 10 }
   },
   grid: {
     horizontal: false,
