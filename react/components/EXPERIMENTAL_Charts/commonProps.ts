@@ -28,3 +28,8 @@ export const colors = [
   '#479A5E',
   '#0000FF'
 ]
+
+export const tooltipProps = {
+  cursor: false,
+  labelStyle: {color: '#828282'}
+}

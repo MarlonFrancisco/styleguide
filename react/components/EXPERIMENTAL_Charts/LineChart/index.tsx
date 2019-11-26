@@ -11,11 +11,10 @@ import {
   TooltipFormatter,
 } from 'recharts'
 import PropTypes from 'prop-types'
-import { tooltipProps } from './constants'
 import { getChartDefaultProps } from '../helpers'
 import getLineDefaultProps from './helpers'
 import uuid from 'uuid'
-import { colors, commonDefaultProps} from '../commonProps'
+import { colors, commonDefaultProps, tooltipProps} from '../commonProps'
 
 interface Props {
   formatter: TooltipFormatter,
@@ -40,7 +39,6 @@ const LineChart: FC<Props & BaseChartProps> = ({
   lineProps
 }) => {
   const { configs } = getChartDefaultProps(commonDefaultProps, schema)
-  console.log(configs)
   const { lineConfigs } = getLineDefaultProps(lineProps)
 
   return (
