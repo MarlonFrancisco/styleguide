@@ -30,7 +30,7 @@ const BubbleChart:FC<BaseChartProps> = ({
         <YAxis dataKey={yAxisKey} {...configs.yAxis} />
         <ZAxis dataKey={zAxisKey} range={getRangeOfZAxis(zAxisKey, data)}/>
         <Tooltip cursor={false}/>
-        <Scatter fill={colors[0]} data={data} />
+        <Scatter fill={colors[0]} />
       </ScatterChartBase>
     </ResponsiveContainer>
   )
