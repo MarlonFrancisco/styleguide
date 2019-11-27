@@ -1,3 +1,5 @@
+#### The Bubble Charts shows the data as points like the Scatter Plot. However, unlike a Scatte Plot, each plotted point has a third measure representing the area of its circle. They are effective to compare and show the relationships between the circles, by the use of positioning and proportions. 
+
 ```js
 const data = [
   { x: 100, y: 200, z: 140 },
