@@ -9,8 +9,8 @@ import {
   CartesianGrid,
   ResponsiveContainer
 } from 'recharts'
-import { getChartDefaultProps } from '../helpers'
-import { commonDefaultProps, colors} from '../commonProps'
+import { getChartDefaultProps, getRangeOfZAxis } from '../helpers'
+import { commonDefaultProps, colors } from '../commonProps'
 
 
 const BubbleChart:FC<BaseChartProps> = ({
@@ -21,18 +21,14 @@ const BubbleChart:FC<BaseChartProps> = ({
   zAxisKey
 }) => {
   const { configs } = getChartDefaultProps(commonDefaultProps, schema)
-  console.log(data.map(item => item[zAxisKey]))
-  const values = data.map(item => item[zAxisKey])
-  const min = Math.min(...values)
-  const max = Math.max(...values)
-  
+
   return (
     <ResponsiveContainer {...configs.container} >
       <ScatterChartBase data={data}>
         <CartesianGrid {...configs.grid}/>
         <XAxis dataKey={xAxisKey} {...configs.xAxis} />
         <YAxis dataKey={yAxisKey} {...configs.yAxis} />
-        <ZAxis dataKey={zAxisKey} range={[min, max]}/>
+        <ZAxis dataKey={zAxisKey} range={getRangeOfZAxis(zAxisKey, data)}/>
         <Tooltip cursor={false}/>
         <Scatter fill={colors[0]} data={data} />
       </ScatterChartBase>

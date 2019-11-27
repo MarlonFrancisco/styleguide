@@ -14,7 +14,15 @@ const getChartDefaultProps = (chartCommonProps: ChartSchema = {}, userProps: Cha
   return { configs }
 }
 
+const getRangeOfZAxis = (key, data) => {
+  const values = data.map(item => item[key])
+  const min = Math.min(...values)
+  const max = Math.max(...values)
+  return [min, max]
+} 
+
 export {
   getChartDefaultProps,
+  getRangeOfZAxis,
   merge
 }
