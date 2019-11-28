@@ -43,32 +43,6 @@ const customConfig = {container: { height: '40%', width: '40%'}};
 - Avoid the grid from visually competing with the data.
 
 
-# Line chart Config
-The config prop defines the style of the chart. This should be given as an object with styles defined for `axis`, `grid`, `container`, according to your needs.  
-
-```js noeditor static
-const config = {
-  container:{
-    height: 300,
-    width: '100%'
-  },
-  xAxis: {
-    axisLine: false,
-    tickLine: false,
-    hide: false
-  },
-  yAxis: {
-    axisLine: false,
-    tickLine: false,
-    hide: false
-  },
-  grid: {
-    horizontal: false,
-    vertical: false,
-  }
-};
-```
-
 #### xAxis or yAxis
 This axis property is responsible to change the visual appearance of the axis in the chart.
 
@@ -117,7 +91,7 @@ const keys = ['customers'];
   xAxisKey='hour'
   config={{ 
     xAxis:{tick: true},
-    grid: {vertical: true, horizontal: true}
+    grid: {vertical: true, horizontal: false}
   }}
 />
 ```
@@ -138,7 +112,6 @@ const keys = ['customers'];
   dataKeys={keys}
   xAxisKey='hour'
   config={{
-    xAxis: {tick: true}, 
     grid: {vertical: false, horizontal: false}
   }}
 />

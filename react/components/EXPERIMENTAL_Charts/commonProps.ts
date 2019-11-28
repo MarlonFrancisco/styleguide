@@ -11,7 +11,7 @@ export const commonDefaultProps: ChartSchema = {
     tickMargin: 15,
     hide: false,
     type: 'category',
-    padding: { left: 10, right: 10 }
+    
   },
   yAxis: {
     axisLine: false,
