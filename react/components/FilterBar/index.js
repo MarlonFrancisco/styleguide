@@ -92,12 +92,59 @@ class FilterBar extends PureComponent {
     this.changeStatementsCallback([])
   }
 
-  render() {
+  highlightedFiltersTags = () => {
+    const optionsKeys = Object.keys(this.props.options)
+
+    return optionsKeys.filter(this.isHighlighted).map(this.optionToFilterTag)
+  }
+
+  isHighlighted = key => {
+    return (
+      this.props.alwaysVisibleFilters.includes(key) ||
+      this.state.visibleExtraOptions.includes(key)
+    )
+  }
+
+  optionToFilterTag = subject => {
+    const {
+      statements,
+      alwaysVisibleFilters,
+      options,
+      submitFilterLabel,
+    } = this.props
+
+    return (
+      <div key={`VTEX__filter_option--${subject}`} className="ma2">
+        <FilterTag
+          alwaysVisible={alwaysVisibleFilters.includes(subject)}
+          getFilterLabel={() => this.getFilterLabel(subject)}
+          submitFilterLabel={submitFilterLabel}
+          subject={subject}
+          options={options}
+          statements={statements}
+          onClickClear={() => this.handleFilterClear(subject)}
+          onSubmitFilterStatement={this.handleSubmitFilter}
+        />
+      </div>
+    )
+  }
+
+  getFilterLabel = subject => {
+    const { options, statements } = this.props
+
+    const statement = statements.find(st => st.subject === subject)
+    const label =
+      options[subject] && options[subject].renderFilterLabel(statement)
+    return (
+      (label && typeof label === 'string' && truncateFilterValue(label)) || '…'
+    )
+  }
+
+  extraFiltersTag = () => {
     const {
       options,
       moreOptionsLabel,
       alwaysVisibleFilters,
-      clearAllFiltersButtonLabel,
       statements,
       subjectPlaceholder,
       submitFilterLabel,
@@ -105,84 +152,66 @@ class FilterBar extends PureComponent {
     } = this.props
     const { visibleExtraOptions } = this.state
     const optionsKeys = Object.keys(options)
+    const areExtraOptionsAvailable =
+      alwaysVisibleFilters.length + visibleExtraOptions.length !==
+      optionsKeys.length
 
     return (
-      optionsKeys.length > 0 && (
-        <div className={`flex flex-wrap nl1`}>
-          {optionsKeys
-            .filter(
-              key =>
-                alwaysVisibleFilters.includes(key) ||
-                visibleExtraOptions.includes(key)
-            )
-            .map(subject => {
-              const statement = statements.find(st => st.subject === subject)
-              return (
-                <div key={`VTEX__filter_option--${subject}`} className="ma2">
-                  <FilterTag
-                    alwaysVisible={alwaysVisibleFilters.includes(subject)}
-                    getFilterLabel={() => {
-                      const label =
-                        options[subject] &&
-                        options[subject].renderFilterLabel(statement)
-                      return (
-                        (label &&
-                          typeof label === 'string' &&
-                          truncateFilterValue(label)) ||
-                        '…'
-                      )
-                    }}
-                    submitFilterLabel={submitFilterLabel}
-                    subject={subject}
-                    options={options}
-                    statements={statements}
-                    onClickClear={() => this.handleFilterClear(subject)}
-                    onSubmitFilterStatement={this.handleSubmitFilter}
-                  />
-                </div>
-              )
-            })}
-          {alwaysVisibleFilters.length + visibleExtraOptions.length !==
-            optionsKeys.length && (
-            <div className="ma2">
-              <FilterTag
-                isMoreOptions
-                subjectPlaceholder={subjectPlaceholder}
-                getFilterLabel={() => moreOptionsLabel}
-                submitFilterLabel={submitFilterLabel}
-                newFilterLabel={newFilterLabel}
-                options={{
-                  ...filterExtraOptions(
-                    options,
-                    alwaysVisibleFilters,
-                    statements
-                  ),
-                }}
-                statements={[]}
-                onSubmitFilterStatement={this.handleMoreOptionsSelected}
-              />
-            </div>
-          )}
-          {clearAllFiltersButtonLabel &&
-            statements.some(st => !!st && !!st.object) && (
-              <div className="ml-auto mt1">
-                <ButtonWithIcon
-                  icon={
-                    <span
-                      className="flex items-center c-muted-2"
-                      style={HEAVY_ICON_OPTICAL_COMPENSATION}>
-                      <IconClose size={13} />
-                    </span>
-                  }
-                  size="small"
-                  variation="tertiary"
-                  onClick={this.handleClearAllfilters}>
-                  <span className="c-muted-2">
-                    {clearAllFiltersButtonLabel}
-                  </span>
-                </ButtonWithIcon>
-              </div>
-            )}
+      areExtraOptionsAvailable && (
+        <div className="ma2">
+          <FilterTag
+            isMoreOptions
+            subjectPlaceholder={subjectPlaceholder}
+            getFilterLabel={() => moreOptionsLabel}
+            submitFilterLabel={submitFilterLabel}
+            newFilterLabel={newFilterLabel}
+            options={{
+              ...filterExtraOptions(options, alwaysVisibleFilters, statements),
+            }}
+            statements={[]}
+            onSubmitFilterStatement={this.handleMoreOptionsSelected}
+          />
+        </div>
+      )
+    )
+  }
+
+  clearFiltersTag = () => {
+    const { clearAllFiltersButtonLabel, statements } = this.props
+    const hasActiveFilters = statements.some(st => !!st && !!st.object)
+
+    return (
+      clearAllFiltersButtonLabel &&
+      hasActiveFilters && (
+        <div className="ml-auto mt1">
+          <ButtonWithIcon
+            icon={
+              <span
+                className="flex items-center c-muted-2"
+                style={HEAVY_ICON_OPTICAL_COMPENSATION}>
+                <IconClose size={13} />
+              </span>
+            }
+            size="small"
+            variation="tertiary"
+            onClick={this.handleClearAllfilters}>
+            <span className="c-muted-2">{clearAllFiltersButtonLabel}</span>
+          </ButtonWithIcon>
+        </div>
+      )
+    )
+  }
+
+  render() {
+    const { options } = this.props
+    const hasOptions = Object.keys(options).length > 0
+
+    return (
+      hasOptions && (
+        <div className="flex flex-wrap nl1">
+          {this.highlightedFiltersTags()}
+          {this.extraFiltersTag()}
+          {this.clearFiltersTag()}
         </div>
       )
     )
@@ -190,7 +219,7 @@ class FilterBar extends PureComponent {
 }
 
 FilterBar.defaultProps = {
-  options: [],
+  options: {},
   moreOptionsLabel: 'More',
   alwaysVisibleFilters: [],
   subjectPlaceholder: 'Select a filter…',
@@ -201,9 +230,28 @@ FilterBar.defaultProps = {
 
 export const filterBarPropTypes = {
   /** filter options (mirroring statements from Conditions component) */
-  options: PropTypes.object.isRequired,
+  options: PropTypes.objectOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      renderFilterLabel: PropTypes.func,
+      verbs: PropTypes.arrayOf(
+        PropTypes.shape({
+          value: PropTypes.string,
+          label: PropTypes.string,
+          object: PropTypes.func,
+        })
+      ),
+    })
+  ).isRequired,
   /** filter statements (mirroring statements from Conditions component) */
-  statements: PropTypes.array,
+  statements: PropTypes.arrayOf(
+    PropTypes.shape({
+      subject: PropTypes.string.isRequired,
+      verb: PropTypes.string.isRequired,
+      object: PropTypes.object,
+      error: PropTypes.string,
+    })
+  ).isRequired,
   /** Filters change callback: returns array of statement definitions */
   onChangeStatements: PropTypes.func.isRequired,
   /** label for MORE options */

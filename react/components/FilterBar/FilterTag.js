@@ -1,6 +1,7 @@
 import React, { PureComponent, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import merge from 'lodash/merge'
+import classnames from 'classnames'
 
 import Button from '../Button'
 import IconClear from '../icon/Clear'
@@ -133,15 +134,13 @@ class FilterTag extends PureComponent {
       subject,
       statements,
       alwaysVisible,
-      getFilterLabel,
       subjectPlaceholder,
       onClickClear,
       isMoreOptions,
-      onSubmitFilterStatement,
       submitFilterLabel,
       newFilterLabel,
     } = this.props
-    const { isMenuOpen, virtualStatement } = this.state
+    const { isMenuOpen } = this.state
 
     const statement = filterStatementBySubject(statements, subject)[0]
     const isEmpty = !!(
@@ -149,42 +148,16 @@ class FilterTag extends PureComponent {
       (!statement || (statement && !statement.object))
     )
 
-    const shouldOmitSubject = !isMoreOptions
-    const shouldOmitVerb = isMoreOptions
-      ? false
-      : options[subject].verbs.length === 1
-
-    // this is temporary just to assure backward compatibility
-    const compatibleOptions = {}
-    Object.keys(options).forEach(opt => {
-      compatibleOptions[opt] = merge({}, { ...options[opt] })
-      compatibleOptions[opt].verbs = options[opt].verbs.map(verb => {
-        if (typeof verb.object === 'function') {
-          return verb
-        }
-        console.warn(
-          '[Deprecation alert]',
-          'FilterBar prop "options" will change contract due to Conditions and Statement refactor.',
-          'please if you are using it let @guigs and @eric know...'
-        )
-        return {
-          ...verb,
-          object: ({ error, onChange, value }) => {
-            return (
-              <>
-                {verb.object.renderFn({
-                  statements: [merge({}, statement, virtualStatement)],
-                  values: value,
-                  statementIndex: 0,
-                  error,
-                  extraParams: verb.object && verb.object.extraParams,
-                  onChangeObjectCallback: onChange,
-                })}
-              </>
-            )
-          },
-        }
-      })
+    console.log({
+      options,
+      subject,
+      statements,
+      alwaysVisible,
+      subjectPlaceholder,
+      onClickClear,
+      isMoreOptions,
+      submitFilterLabel,
+      newFilterLabel,
     })
 
     return (
@@ -193,104 +166,314 @@ class FilterTag extends PureComponent {
         style={{
           ...(isMenuOpen && OPEN_MENU_STYLE),
         }}
-        className={`br2 ba b--solid ${
-          isEmpty || isMoreOptions ? '' : 'pr4'
-        } pv1 dib ${
-          alwaysVisible && isEmpty
-            ? 'bg-transparent hover-bg-muted-5 b--muted-4'
-            : isMoreOptions
-            ? 'hover-bg-muted-5 b--muted-4'
-            : 'bg-action-secondary hover-bg-action-secondary b--action-secondary'
-        } c-on-base`}>
+        className={this.filterTagClasses(
+          isEmpty,
+          isMoreOptions,
+          alwaysVisible
+        )}>
         <div className="flex items-stretch">
-          <Menu
-            open={isMenuOpen}
-            align="left"
-            button={
-              <button
-                type="button"
-                className="bw1 ba br2 v-mid relative bg-transparent b--transparent c-action-primary pointer w-100 outline-0"
-                onClick={isMenuOpen ? this.closeMenu : this.openMenu}>
-                <div className="flex items-center justify-center h-100 ph3 ">
-                  <span className="flex items-center nl1 nowrap">
-                    {isMoreOptions ? (
-                      <span className="fw5">{getFilterLabel()}</span>
-                    ) : (
-                      <Fragment>
-                        <span>{`${options[subject].label}:\xa0`}</span>
-                        <span className="fw5">{`${getFilterLabel(
-                          filterStatementBySubject(statements, subject)
-                        )}`}</span>
-                      </Fragment>
-                    )}
-                    <div className="ml2 nr2">
-                      <IconCaretDown size={11} color="currentColor" />
-                    </div>
-                  </span>
-                </div>
-              </button>
-            }>
-            <div className="ma5">
-              <div
-                className={`flex flex-wrap ${isMoreOptions ? 'mb6' : 'mb3'}`}>
-                {isMoreOptions && (
-                  <span className="f4 mh3">{newFilterLabel}</span>
-                )}
-                <div className="flex flex-column">
-                  {shouldOmitVerb && (
-                    <span className="mh3">
-                      {options[subject].verbs[0].label}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <Statement
-                isFullWidth
-                omitSubject={shouldOmitSubject}
-                omitVerbs={shouldOmitVerb}
-                options={compatibleOptions}
-                subjectPlaceholder={subjectPlaceholder}
-                statement={
-                  isMoreOptions
-                    ? virtualStatement
-                    : merge({}, statement, virtualStatement)
-                }
-                onChangeStatement={this.handleChangeStatement}
-                onChangeObjectCallback={st =>
-                  this.handleChangeStatement({
-                    ...st,
-                    error: null,
-                  })
-                }
-              />
-              <div className="flex justify-start mt4 mh3">
-                <Button
-                  type="submit"
-                  disabled={virtualStatement && !virtualStatement.object}
-                  onClick={() => {
-                    onSubmitFilterStatement(virtualStatement)
-                    this.resetVirtualStatement()
-                    this.closeMenu()
-                  }}>
-                  {submitFilterLabel}
-                </Button>
-              </div>
-            </div>
+          <Menu open={isMenuOpen} align="left" button={this.menuToggleButton()}>
+            {this.defaultWidget()}
           </Menu>
-          {!isEmpty && !isMoreOptions && (
-            <div
-              className="flex items-center c-link hover-c-link pointer"
-              onClick={() => {
-                this.resetVirtualStatement()
-                onClickClear()
-              }}>
-              <IconClear solid size={16} />
-            </div>
-          )}
+          <ClearButton
+            enabled={!isEmpty && !isMoreOptions}
+            onClick={() => {
+              this.resetVirtualStatement()
+              onClickClear()
+            }}
+          />
         </div>
       </div>
     )
   }
+
+  menuToggleButton = () => {
+    const {
+      options,
+      subject,
+      statements,
+      getFilterLabel,
+      isMoreOptions,
+    } = this.props
+    const { isMenuOpen } = this.state
+
+    return (
+      <button
+        type="button"
+        className="bw1 ba br2 v-mid relative bg-transparent b--transparent c-action-primary pointer w-100 outline-0"
+        onClick={isMenuOpen ? this.closeMenu : this.openMenu}>
+        <div className="flex items-center justify-center h-100 ph3 ">
+          <span className="flex items-center nl1 nowrap">
+            {isMoreOptions ? (
+              <span className="fw5">{getFilterLabel()}</span>
+            ) : (
+              <Fragment>
+                <span>{`${options[subject].label}:\xa0`}</span>
+                <span className="fw5">{`${getFilterLabel(
+                  filterStatementBySubject(statements, subject)
+                )}`}</span>
+              </Fragment>
+            )}
+            <div className="ml2 nr2">
+              <IconCaretDown size={11} color="currentColor" />
+            </div>
+          </span>
+        </div>
+      </button>
+    )
+  }
+
+  filterTagClasses(isEmpty, isMoreOptions, alwaysVisible) {
+    return classnames(`br2 ba b--solid pv1 dib c-on-base`, {
+      pr4: !(isEmpty || isMoreOptions),
+      'bg-transparent hover-bg-muted-5 b--muted-4': alwaysVisible && isEmpty,
+      'hover-bg-muted-5 b--muted-4':
+        !(alwaysVisible && isEmpty) && isMoreOptions,
+      'bg-action-secondary hover-bg-action-secondary b--action-secondary':
+        !(alwaysVisible && isEmpty) && !isMoreOptions,
+    })
+  }
+
+  createLegacyOptions = (options, statement) => {
+    return Object.keys(options).reduce(
+      (legacyOptionsAcc, opt) => ({
+        ...legacyOptionsAcc,
+        [opt]: {
+          ...merge({}, { ...options[opt] }),
+          verbs: options[opt].verbs.map(this.toLegacyVerbOption(statement)),
+        },
+      }),
+      {}
+    )
+  }
+
+  toLegacyVerbOption = statement => {
+    const { virtualStatement } = this.state
+
+    return verb => {
+      if (typeof verb.object === 'function') {
+        return verb
+      }
+      console.warn(
+        '[Deprecation alert]',
+        'FilterBar prop "options" will change contract due to Conditions and Statement refactor.',
+        'please if you are using it let @guigs and @eric know...'
+      )
+      return {
+        ...verb,
+        object: ({ error, onChange, value }) => {
+          return (
+            <>
+              {verb.object.renderFn({
+                statements: [merge({}, statement, virtualStatement)],
+                values: value,
+                statementIndex: 0,
+                error,
+                extraParams: verb.object && verb.object.extraParams,
+                onChangeObjectCallback: onChange,
+              })}
+            </>
+          )
+        },
+      }
+    }
+  }
+
+  applyButton = (isEmpty, isMoreOptions, onClickClear) => {
+    return (
+      !isEmpty &&
+      !isMoreOptions && (
+        <div
+          className="flex items-center c-link hover-c-link pointer"
+          onClick={() => {
+            this.resetVirtualStatement()
+            onClickClear()
+          }}>
+          <IconClear solid size={16} />
+        </div>
+      )
+    )
+  }
+
+  handleApplyButtonClick = () => {
+    this.props.onSubmitFilterStatement(this.state.virtualStatement)
+    this.resetVirtualStatement()
+    this.closeMenu()
+  }
+
+  defaultWidget = () => {
+    const {
+      options,
+      subject,
+      statements,
+      subjectPlaceholder,
+      isMoreOptions,
+      submitFilterLabel,
+      newFilterLabel,
+    } = this.props
+    const { virtualStatement } = this.state
+
+    const statement = filterStatementBySubject(statements, subject)[0]
+
+    const shouldOmitSubject = !isMoreOptions
+    const shouldOmitVerbChoice = isMoreOptions
+      ? false
+      : options[subject].verbs.length === 1
+
+    // this is temporary just to assure backward compatibility
+    const compatibleOptions = this.createLegacyOptions(options, statement)
+
+    return (
+      <ConditionsWidget
+        isMoreOptions={isMoreOptions}
+        shouldOmitVerbChoice={shouldOmitVerbChoice}
+        shouldOmitSubject={shouldOmitSubject}
+        options={compatibleOptions}
+        subjectPlaceholder={subjectPlaceholder}
+        statement={statement}
+        onChangeStatement={this.handleChangeStatement}
+        onChangeObjectCallback={st =>
+          this.handleChangeStatement({
+            ...st,
+            error: null,
+          })
+        }
+        virtualStatement={virtualStatement}
+        submitFilterLabel={submitFilterLabel}
+        onApply={this.handleApplyButtonClick}
+        header={{ newFilterLabel, verbLabel: options[subject].verbs[0].label }}
+      />
+    )
+  }
+}
+
+const MenuHeader = ({ title, fixedVerb }) => {
+  return (
+    <div className={`flex flex-wrap ${title.enabled ? 'mb6' : 'mb3'}`}>
+      {title.enabled && <span className="f4 mh3">{title.label}</span>}
+      <div className="flex flex-column">
+        {fixedVerb.enabled && <span className="mh3">{fixedVerb.label}</span>}
+      </div>
+    </div>
+  )
+}
+
+const ClearButton = ({ enabled, onClick }) => {
+  return (
+    enabled && (
+      <div
+        className="flex items-center c-link hover-c-link pointer"
+        onClick={onClick}>
+        <IconClear solid size={16} />
+      </div>
+    )
+  )
+}
+
+const ApplyButton = ({ disabled, label, onClick }) => {
+  return (
+    <div className="flex justify-start mt4 mh3">
+      <Button type="submit" disabled={disabled} onClick={onClick}>
+        {label}
+      </Button>
+    </div>
+  )
+}
+
+const ConditionsWidget = ({
+  isMoreOptions,
+  shouldOmitVerbChoice,
+  shouldOmitSubject,
+  options,
+  subjectPlaceholder,
+  statement,
+  onChangeStatement,
+  onChangeObjectCallback,
+  virtualStatement,
+  submitFilterLabel,
+  onApply,
+  header: { newFilterLabel, verbLabel },
+}) => {
+  return (
+    <div className="ma5">
+      <MenuHeader
+        title={{
+          enabled: isMoreOptions,
+          label: newFilterLabel,
+        }}
+        fixedVerb={{
+          enabled: shouldOmitVerbChoice,
+          label: verbLabel,
+        }}
+      />
+      <Statement
+        isFullWidth
+        omitSubject={shouldOmitSubject}
+        omitVerbs={shouldOmitVerbChoice}
+        options={options}
+        subjectPlaceholder={subjectPlaceholder}
+        statement={
+          isMoreOptions
+            ? virtualStatement
+            : merge({}, statement, virtualStatement)
+        }
+        onChangeStatement={onChangeStatement}
+        onChangeObjectCallback={onChangeObjectCallback}
+      />
+      <ApplyButton
+        disabled={virtualStatement && !virtualStatement.object}
+        label={submitFilterLabel}
+        onClick={onApply}
+      />
+    </div>
+  )
+}
+
+ConditionsWidget.propTypes = {
+  isMoreOptions: PropTypes.bool,
+  shouldOmitVerbChoice: PropTypes.bool,
+  shouldOmitSubject: PropTypes.bool,
+  options: PropTypes.object,
+  subjectPlaceholder: PropTypes.string,
+  statement: PropTypes.object,
+  onChangeStatement: PropTypes.func,
+  onChangeObjectCallback: PropTypes.func,
+  virtualStatement: PropTypes.object,
+  submitFilterLabel: PropTypes.string,
+  onApply: PropTypes.func,
+  header: PropTypes.shape({
+    newFilterLabel: PropTypes.string,
+    verbLabel: PropTypes.string,
+  }),
+}
+
+ApplyButton.propTypes = {
+  disabled: PropTypes.bool.isRequired,
+  label: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+}
+
+ClearButton.propTypes = {
+  enabled: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+}
+
+MenuHeader.defaultProps = {
+  enabled: false,
+  title: 'New Filter',
+  shouldOmitVerb: false,
+  verb: '',
+}
+
+MenuHeader.propTypes = {
+  title: PropTypes.shape({
+    enabled: PropTypes.bool,
+    label: PropTypes.string,
+  }),
+  fixedVerb: PropTypes.shape({
+    enabled: PropTypes.bool,
+    label: PropTypes.string,
+  }),
 }
 
 FilterTag.defaultProps = {
