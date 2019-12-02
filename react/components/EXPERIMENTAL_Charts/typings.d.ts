@@ -17,6 +17,7 @@ type BaseChartProps = {
   dataKeys: string[],
   xAxisKey: string,
   yAxisKey: string,
+  zAxisKey: string,
   config: ChartConfig
 }
 
