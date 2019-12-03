@@ -1,4 +1,4 @@
-import React, {FC} from 'react'
+import React, { FC } from 'react'
 import {
   ScatterChart as ScatterChartBase, 
   XAxis, 
@@ -11,7 +11,15 @@ import {
 } from 'recharts'
 import PropTypes from 'prop-types'
 import { getChartDefaultProps, getRangeOfZAxis } from '../helpers'
-import { colors} from '../commonProps'
+import { colors } from '../commonProps'
+import uuid from 'uuid'
+
+const CustomTooltip = (props) => {
+  console.log(props)
+  return props.payload.map(item => 
+    <p key={uuid()}>{`${item.dataKey}: ${item.value}`}</p>
+  )
+}
 
 const ScatterChart:FC<BaseChartProps> = ({
   data,
@@ -31,8 +39,8 @@ const ScatterChart:FC<BaseChartProps> = ({
         {zAxisKey && 
           <ZAxis dataKey={zAxisKey} range={getRangeOfZAxis(zAxisKey, data)}/>
         }
-        <Tooltip cursor={false}/>
-        <Scatter fill={colors[0]} />
+        <Tooltip cursor={false} content={<CustomTooltip />}/>
+        <Scatter fill={colors[0]}/>
       </ScatterChartBase>
     </ResponsiveContainer>
   )
@@ -73,11 +81,8 @@ ScatterChart.propTypes = {
   /** The key of x-axis which is corresponding to the data. */
   xAxisKey: PropTypes.string.isRequired,
 
-  /** The keys or getter of a group of data which should be unique in a ScatterChart. */
-  dataKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
-  
-  /** The key of y-axis which is corresponding to the data, it measures size of dot. */
-  zAxisKey: PropTypes.string.isRequired,
+  /** The keys of y-axis which is corresponding to the data. */
+  yAxisKey: PropTypes.string.isRequired,
 }
 
 export default ScatterChart
