@@ -10,12 +10,12 @@ import {
   ZAxis
 } from 'recharts'
 import PropTypes from 'prop-types'
+import uuid from 'uuid'
+import { commonDefaultProps } from './constants'
 import { getChartDefaultProps, getRangeOfZAxis } from '../helpers'
 import { colors } from '../commonProps'
-import uuid from 'uuid'
 
 const CustomTooltip = (props) => {
-  console.log(props)
   return props.payload.map(item => 
     <p key={uuid()}>{`${item.dataKey}: ${item.value}`}</p>
   )
@@ -28,7 +28,8 @@ const ScatterChart:FC<BaseChartProps> = ({
   yAxisKey,
   zAxisKey
 }) => {
-  const { configs } = getChartDefaultProps(config)
+  const { configs } = getChartDefaultProps(config, commonDefaultProps)
+  console.log(configs)
   
   return (
     <ResponsiveContainer {...configs.container} >
