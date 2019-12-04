@@ -12,12 +12,12 @@ export const defaultProps: DefaultBarProps  = {
 export const chartDefaultConfig: ChartConfig = {
   xAxis: {
     axisLine: true,
-    tickLine: true,
+    tickLine: false,
     type: 'category',
   },
   yAxis: {
     axisLine: true,
-    tickLine: true,
+    tickLine: false,
     type: 'number',
   },
 }
