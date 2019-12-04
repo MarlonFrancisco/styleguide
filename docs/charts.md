@@ -8,3 +8,4 @@ Our chart components enable you to create complete and cohesive graphics that fi
 - [BarChart](/#/Components/Charts/BarChart)
 - [ScatterChart](/#/Components/Charts/ScatterChart)
 - [BubbleChart](/#/Components/Charts/BubbleChart)
+- [SankeyChart](/#/Components/Charts/SankeyChart)
