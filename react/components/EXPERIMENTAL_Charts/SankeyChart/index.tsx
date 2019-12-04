@@ -124,7 +124,7 @@ const data0 = {
   ],
 }
 
-const SankeyDemo = () => {
+const SankeyChart = () => {
   return (
     <div className="sankey-charts">
       <div>
@@ -149,4 +149,4 @@ const SankeyDemo = () => {
   )
 }
 
-export default SankeyDemo
+export default SankeyChart
