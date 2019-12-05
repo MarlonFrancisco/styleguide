@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import merge from 'lodash/merge'
 import classnames from 'classnames'
 
-import Button from '../Button'
 import IconClear from '../icon/Clear'
 import IconCaretDown from '../icon/CaretDown'
-import Statement from '../Statement'
 import Menu from './Menu'
+import ConditionsWidget from './ConditionsWidget'
+import ClearButton from './ClearButton'
 
 const OPEN_MENU_STYLE = { backgroundColor: '#dbe9fd' }
 const emptyVirtualStatement = {
@@ -345,135 +345,6 @@ class FilterTag extends PureComponent {
       />
     )
   }
-}
-
-const MenuHeader = ({ title, fixedVerb }) => {
-  return (
-    <div className={`flex flex-wrap ${title.enabled ? 'mb6' : 'mb3'}`}>
-      {title.enabled && <span className="f4 mh3">{title.label}</span>}
-      <div className="flex flex-column">
-        {fixedVerb.enabled && <span className="mh3">{fixedVerb.label}</span>}
-      </div>
-    </div>
-  )
-}
-
-const ClearButton = ({ enabled, onClick }) => {
-  return (
-    enabled && (
-      <div
-        className="flex items-center c-link hover-c-link pointer"
-        onClick={onClick}>
-        <IconClear solid size={16} />
-      </div>
-    )
-  )
-}
-
-const ApplyButton = ({ disabled, label, onClick }) => {
-  return (
-    <div className="flex justify-start mt4 mh3">
-      <Button type="submit" disabled={disabled} onClick={onClick}>
-        {label}
-      </Button>
-    </div>
-  )
-}
-
-const ConditionsWidget = ({
-  isMoreOptions,
-  shouldOmitVerbChoice,
-  shouldOmitSubject,
-  options,
-  subjectPlaceholder,
-  statement,
-  onChangeStatement,
-  onChangeObjectCallback,
-  virtualStatement,
-  submitFilterLabel,
-  onApply,
-  header: { newFilterLabel, verbLabel },
-}) => {
-  return (
-    <div className="ma5">
-      <MenuHeader
-        title={{
-          enabled: isMoreOptions,
-          label: newFilterLabel,
-        }}
-        fixedVerb={{
-          enabled: shouldOmitVerbChoice,
-          label: verbLabel,
-        }}
-      />
-      <Statement
-        isFullWidth
-        omitSubject={shouldOmitSubject}
-        omitVerbs={shouldOmitVerbChoice}
-        options={options}
-        subjectPlaceholder={subjectPlaceholder}
-        statement={
-          isMoreOptions
-            ? virtualStatement
-            : merge({}, statement, virtualStatement)
-        }
-        onChangeStatement={onChangeStatement}
-        onChangeObjectCallback={onChangeObjectCallback}
-      />
-      <ApplyButton
-        disabled={virtualStatement && !virtualStatement.object}
-        label={submitFilterLabel}
-        onClick={onApply}
-      />
-    </div>
-  )
-}
-
-ConditionsWidget.propTypes = {
-  isMoreOptions: PropTypes.bool,
-  shouldOmitVerbChoice: PropTypes.bool,
-  shouldOmitSubject: PropTypes.bool,
-  options: PropTypes.object,
-  subjectPlaceholder: PropTypes.string,
-  statement: PropTypes.object,
-  onChangeStatement: PropTypes.func,
-  onChangeObjectCallback: PropTypes.func,
-  virtualStatement: PropTypes.object,
-  submitFilterLabel: PropTypes.string,
-  onApply: PropTypes.func,
-  header: PropTypes.shape({
-    newFilterLabel: PropTypes.string,
-    verbLabel: PropTypes.string,
-  }),
-}
-
-ApplyButton.propTypes = {
-  disabled: PropTypes.bool.isRequired,
-  label: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
-}
-
-ClearButton.propTypes = {
-  enabled: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
-}
-
-MenuHeader.defaultProps = {
-  enabled: false,
-  title: 'New Filter',
-  shouldOmitVerb: false,
-  verb: '',
-}
-
-MenuHeader.propTypes = {
-  title: PropTypes.shape({
-    enabled: PropTypes.bool,
-    label: PropTypes.string,
-  }),
-  fixedVerb: PropTypes.shape({
-    enabled: PropTypes.bool,
-    label: PropTypes.string,
-  }),
 }
 
 FilterTag.defaultProps = {
