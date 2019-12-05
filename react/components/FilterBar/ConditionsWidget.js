@@ -1,4 +1,5 @@
 import React from 'react'
+import merge from 'lodash/merge'
 import PropTypes from 'prop-types'
 
 import Statement from '../Statement'

@@ -1,6 +1,6 @@
 import React, { PureComponent, Fragment } from 'react'
-import PropTypes from 'prop-types'
 import merge from 'lodash/merge'
+import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import IconClear from '../icon/Clear'
