@@ -1,5 +1,51 @@
-import React from 'react'
-import { Sankey, Tooltip } from 'recharts'
+import React, {Component} from 'react'
+import { Sankey,Label, Tooltip, Layer, Rectangle, ResponsiveContainer } from 'recharts'
+import uuid from 'uuid'
+import PropTypes from 'prop-types'
+
+
+const data1 = {
+  nodes: [
+    { name: 'Visit' },
+    { name: 'Direct-Favourite' },
+    { name: 'Page-Click' },
+    { name: 'Detail-Favourite' },
+    { name: 'Lost' },
+  ],
+  links: [
+    { source: 0, target: 1, value: 3728.3 },
+    { source: 0, target: 2, value: 354170 },
+    { source: 2, target: 3, value: 62429 },
+    { source: 2, target: 4, value: 291741 },
+  ],
+};
+
+const MyCustomNode = ({ x, y, width, height, index, payload, containerWidth}) => {
+  const isOut = x + width + 6 > containerWidth;
+  return (
+    <Layer key={`CustomNode${index}`}>
+      <Rectangle
+        x={x} y={y} width={width} height={height}
+        fill="#5192ca" fillOpacity="1"
+      />
+      <text
+        textAnchor={isOut ? 'end' : 'start'}
+        x={isOut ? x - 6 : x + width + 6}
+        y={y + height / 2}
+        fontSize="14"
+        stroke="#333"
+      >{payload.name}</text>
+      <text
+        textAnchor={isOut ? 'end' : 'start'}
+        x={isOut ? x - 6 : x + width + 6}
+        y={y + height / 2 + 13}
+        fontSize="12"
+        stroke="#333"
+        strokeOpacity="0.5"
+      >{payload.value + 'k'}</text>
+    </Layer>
+  );
+}
 
 const data0 = {
   nodes: [
@@ -124,28 +170,33 @@ const data0 = {
   ],
 }
 
+
 const SankeyChart = () => {
+  const teste = {
+    height: '100%',
+    width: '100%',
+    aspect: 4.0/3.0
+  }
   return (
-    <div className="sankey-charts">
-      <div>
-        <pre>1. Simple Sankey</pre>
-        <Sankey width={960} height={500} data={data0}>
-          <Tooltip />
+    <ResponsiveContainer {...teste}>
+      <Sankey
+          data={data1}
+          nodeWidth={10}
+          margin={{
+            left: 200,
+            right: 200,
+            top: 100,
+            bottom: 100
+          }}
+          nodePadding={50}
+          node={(props) => <MyCustomNode {...props}/>}
+          link={{ stroke: '#77c878' }}
+        >
+          <Tooltip/>
         </Sankey>
-      </div>
-      <br />
-      <div>
-        <pre>2. Customized Sankey.</pre>
-        <Sankey
-          width={960}
-          height={500}
-          data={data0}
-          node={{ fill: '#8a52b6' }}
-          link={{ stroke: '#77c878' }}>
-          {/* <Tooltip /> */}
-        </Sankey>
-      </div>
-    </div>
+    </ResponsiveContainer>
+    
+  
   )
 }
 
