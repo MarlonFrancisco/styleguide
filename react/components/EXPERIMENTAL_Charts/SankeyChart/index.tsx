@@ -8,12 +8,14 @@ import { getChartDefaultProps }from '../helpers'
 
 import SankeyLink from './SankeyLink'
 import SankeyNode from './SankeyNode'
+import PropTypes from 'prop-types'
 
 type SankeyProps = {
   labelFormatter: Function,
+  valueFormatter: Function,
   padding: number,
 }
-
+//todo: omit some types, add value formatter
 const SankeyChart: FC<BaseChartProps & SankeyProps>= ({
   data,
   config,
@@ -32,8 +34,12 @@ const SankeyChart: FC<BaseChartProps & SankeyProps>= ({
             bottom: 100
           }}
           nodePadding={padding}
-          node={(props) => <SankeyNode {...props} labelFormatter={labelFormatter}/>}
-          link={(props) => <SankeyLink {...props}/>}
+          node={
+            (props) => <SankeyNode {...props} labelFormatter={labelFormatter}/>
+          }
+          link={
+            (props) => <SankeyLink {...props}/>
+          }
         >
           <Tooltip />
         </Sankey>
@@ -41,4 +47,44 @@ const SankeyChart: FC<BaseChartProps & SankeyProps>= ({
   )
 }
 
+
+SankeyChart.propTypes = {
+  /** The source data, in which each element is an object. */
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+
+  /** The key of x-axis which is corresponding to the data. */
+  xAxisKey: PropTypes.string.isRequired,
+  
+  /** The formatter function of value in node.*/
+  labelFormatter: PropTypes.func,
+  
+  /** The schema prop changes some styles of the chart. This prop should be given as an object.*/
+  config: PropTypes.shape({
+    xAxis: PropTypes.shape({
+      axisLine: PropTypes.bool,
+      tickLine: PropTypes.bool,
+      tick: PropTypes.bool,
+      hide: PropTypes.bool
+    }),
+    yAxis: PropTypes.shape({
+      axisLine: PropTypes.bool,
+      tickLine: PropTypes.bool,
+      tick: PropTypes.bool,
+      hide: PropTypes.bool
+    }), 
+    container: PropTypes.shape({
+      height: PropTypes.oneOfType(
+        [PropTypes.string, PropTypes.number]
+      ),
+      width: PropTypes.oneOfType(
+        [PropTypes.string, PropTypes.number]
+      ),
+    }),
+    grid: PropTypes.shape({
+      horizontal: PropTypes.bool,
+      vertical: PropTypes.bool,
+    })
+  }),
+}
+  
 export default SankeyChart
