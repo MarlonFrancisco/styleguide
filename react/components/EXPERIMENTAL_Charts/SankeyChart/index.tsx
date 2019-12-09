@@ -1,8 +1,12 @@
-import React, {Component} from 'react'
-import { Sankey,Label, Tooltip, Layer, Rectangle, ResponsiveContainer } from 'recharts'
-import uuid from 'uuid'
-import PropTypes from 'prop-types'
+import React from 'react'
+import {
+  Sankey,
+  Tooltip,
+  ResponsiveContainer
+} from 'recharts'
 
+import SankeyLink from './SankeyLink'
+import SankeyNode from './SankeyNode'
 
 const data1 = {
   nodes: [
@@ -20,32 +24,7 @@ const data1 = {
   ],
 };
 
-const MyCustomNode = ({ x, y, width, height, index, payload, containerWidth}) => {
-  const isOut = x + width + 6 > containerWidth;
-  return (
-    <Layer key={`CustomNode${index}`}>
-      <Rectangle
-        x={x} y={y} width={width} height={height}
-        fill="#5192ca" fillOpacity="1"
-      />
-      <text
-        textAnchor={isOut ? 'end' : 'start'}
-        x={isOut ? x - 6 : x + width + 6}
-        y={y + height / 2}
-        fontSize="14"
-        stroke="#333"
-      >{payload.name}</text>
-      <text
-        textAnchor={isOut ? 'end' : 'start'}
-        x={isOut ? x - 6 : x + width + 6}
-        y={y + height / 2 + 13}
-        fontSize="12"
-        stroke="#333"
-        strokeOpacity="0.5"
-      >{payload.value + 'k'}</text>
-    </Layer>
-  );
-}
+
 
 const data0 = {
   nodes: [
@@ -181,16 +160,16 @@ const SankeyChart = () => {
     <ResponsiveContainer {...teste}>
       <Sankey
           data={data1}
-          nodeWidth={10}
           margin={{
             left: 200,
             right: 200,
             top: 100,
             bottom: 100
           }}
-          nodePadding={50}
-          node={(props) => <MyCustomNode {...props}/>}
-          link={{ stroke: '#77c878' }}
+          nodePadding={5}
+          targetX={4}
+          node={(props) => <SankeyNode {...props}/>}
+          link={(props) => <SankeyLink {...props}/>}
         >
           <Tooltip/>
         </Sankey>
