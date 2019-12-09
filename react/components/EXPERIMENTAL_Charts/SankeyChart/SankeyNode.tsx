@@ -12,9 +12,10 @@ const SankeyNode = ({
   height,
   index,
   payload,
-  containerWidth
+  containerWidth,
+  labelFormatter
 }) => {
-
+  console.log(labelFormatter)
   const isOut = x + width + 6 > containerWidth;
   
   return (
@@ -34,17 +35,7 @@ const SankeyNode = ({
         fontSize="14"
         stroke="#333"
       >
-        {payload.name}
-      </text>
-      <text
-        textAnchor={isOut ? 'end' : 'start'}
-        x={isOut ? x - 6 : x + width + 6}
-        y={y + height / 2 + 13}
-        fontSize="12"
-        stroke="#333"
-        strokeOpacity="0.5"
-      >
-        {payload.value + 'k'}
+        {labelFormatter(payload.name)}
       </text>
     </Layer>
   );

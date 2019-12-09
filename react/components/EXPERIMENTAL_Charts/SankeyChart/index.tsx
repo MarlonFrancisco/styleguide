@@ -9,9 +9,16 @@ import { getChartDefaultProps }from '../helpers'
 import SankeyLink from './SankeyLink'
 import SankeyNode from './SankeyNode'
 
-const SankeyChart: FC<BaseChartProps>= ({
+type SankeyProps = {
+  labelFormatter: Function,
+  padding: number,
+}
+
+const SankeyChart: FC<BaseChartProps & SankeyProps>= ({
   data,
-  config
+  config,
+  padding,
+  labelFormatter
 }) => {
   const { configs } = getChartDefaultProps(config)
   return (
@@ -24,8 +31,8 @@ const SankeyChart: FC<BaseChartProps>= ({
             top: 100,
             bottom: 100
           }}
-          nodePadding={5}
-          node={(props) => <SankeyNode {...props}/>}
+          nodePadding={padding}
+          node={(props) => <SankeyNode {...props} labelFormatter={labelFormatter}/>}
           link={(props) => <SankeyLink {...props}/>}
         >
           <Tooltip />

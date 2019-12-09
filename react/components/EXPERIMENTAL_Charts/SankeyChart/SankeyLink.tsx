@@ -31,15 +31,15 @@ const SankeyLink: FC<Props> = ({
     <Layer key={`CustomLink${index}`}>
       <path
         d={`
-        M${sourceX},${sourceY + linkWidth / 2}
-        C${sourceControlX},${sourceY + linkWidth / 2}
-        ${targetControlX},${targetY + linkWidth / 2}
-        ${targetX},${targetY + linkWidth / 2}
-        L${targetX},${targetY - linkWidth / 2}
-        C${targetControlX},${targetY - linkWidth / 2}
-        ${sourceControlX},${sourceY - linkWidth / 2}
-        ${sourceX},${sourceY - linkWidth / 2}
-        Z
+          M${sourceX},${sourceY + linkWidth / 2}
+          C${sourceControlX},${sourceY + linkWidth / 2}
+          ${targetControlX},${targetY + linkWidth / 2}
+          ${targetX},${targetY + linkWidth / 2}
+          L${targetX},${targetY - linkWidth / 2}
+          C${targetControlX},${targetY - linkWidth / 2}
+          ${sourceControlX},${sourceY - linkWidth / 2}
+          ${sourceX},${sourceY - linkWidth / 2}
+          Z
         `}
         fill={fill}
         strokeWidth="0"
