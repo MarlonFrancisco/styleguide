@@ -4,7 +4,7 @@ import {
   Layer,
   Rectangle
 } from 'recharts'
-
+import { colors } from '../commonProps'
 const SankeyNode = ({
   x,
   y,
@@ -13,9 +13,8 @@ const SankeyNode = ({
   index,
   payload,
   containerWidth,
-  labelFormatter
+  labelFormatter,
 }) => {
-  console.log(labelFormatter)
   const isOut = x + width + 6 > containerWidth;
   
   return (

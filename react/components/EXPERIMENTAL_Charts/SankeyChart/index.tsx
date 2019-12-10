@@ -15,12 +15,13 @@ type SankeyProps = {
   valueFormatter: Function,
   padding: number,
 }
-//todo: omit some types, add value formatter
+
 const SankeyChart: FC<BaseChartProps & SankeyProps>= ({
   data,
   config,
   padding,
-  labelFormatter
+  labelFormatter,
+  valueFormatter
 }) => {
   const { configs } = getChartDefaultProps(config)
   return (
@@ -34,12 +35,14 @@ const SankeyChart: FC<BaseChartProps & SankeyProps>= ({
             bottom: 100
           }}
           nodePadding={padding}
-          node={
-            (props) => <SankeyNode {...props} labelFormatter={labelFormatter}/>
-          }
-          link={
-            (props) => <SankeyLink {...props}/>
-          }
+          node={(props) => (
+            <SankeyNode
+              {...props}
+              labelFormatter={labelFormatter}
+              valueFormatter={valueFormatter}
+            />
+          )}
+          link={(props) => <SankeyLink {...props} />}
         >
           <Tooltip />
         </Sankey>
@@ -55,8 +58,11 @@ SankeyChart.propTypes = {
   /** The key of x-axis which is corresponding to the data. */
   xAxisKey: PropTypes.string.isRequired,
   
-  /** The formatter function of value in node.*/
+  /** The formatter function of label in node.*/
   labelFormatter: PropTypes.func,
+
+  /** The formatter function of value in node.*/
+  valueFormatter: PropTypes.func,
   
   /** The schema prop changes some styles of the chart. This prop should be given as an object.*/
   config: PropTypes.shape({

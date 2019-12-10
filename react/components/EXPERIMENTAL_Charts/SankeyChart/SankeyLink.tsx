@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react'
 import { Layer } from 'recharts'
+import { colors } from '../commonProps'
 
 type Props = {
   sourceX: number,
@@ -25,7 +26,7 @@ const SankeyLink: FC<Props> = ({
   index
 }) => {
 
-  const [ fill, setFill ] = useState('rgba(0, 136, 254, 0.5)')
+  const [ fill, setFill ] = useState(colors[1])
 
   return (
     <Layer key={`CustomLink${index}`}>
@@ -43,8 +44,8 @@ const SankeyLink: FC<Props> = ({
         `}
         fill={fill}
         strokeWidth="0"
-        onMouseLeave={() => { setFill('rgba(0, 136, 254, 0.5)');}}
-        onMouseEnter={() => { setFill('#C0C0C0');}}
+        onMouseLeave={() => { setFill(colors[1])}}
+        onMouseEnter={() => { setFill('#9fdfcd')}}
       />
     </Layer>
   );
