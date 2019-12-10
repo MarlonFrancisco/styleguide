@@ -1,3 +1,4 @@
+#### Sankey Charts shows the data flow, in which the width of the arrows is shown proportionally to the flow quantity.
 ```js
 const data = {
   nodes: [
