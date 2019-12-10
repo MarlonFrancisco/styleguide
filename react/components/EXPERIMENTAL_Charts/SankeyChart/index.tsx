@@ -31,8 +31,8 @@ const SankeyChart: FC<BaseChartProps & SankeyProps>= ({
       <Sankey
         data={data}
         margin={{
-          left: 200,
-          right: 200,
+          left: 100,
+          right: 100,
           top: 100,
           bottom: 100
         }}

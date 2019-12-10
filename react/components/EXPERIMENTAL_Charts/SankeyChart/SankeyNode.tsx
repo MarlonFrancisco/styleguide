@@ -34,7 +34,7 @@ const SankeyNode = ({
         fontSize="12"
         stroke="#333"
       >
-        {labelFormatter(payload.name)}
+        {labelFormatter? labelFormatter(payload.name): payload.name}
       </text>
       <text
         textAnchor={isOut ? 'end' : 'start'}
