@@ -31,10 +31,20 @@ const SankeyNode = ({
         textAnchor={isOut ? 'end' : 'start'}
         x={isOut ? x - 6 : x + width + 6}
         y={y + height / 2}
-        fontSize="14"
+        fontSize="12"
         stroke="#333"
       >
         {labelFormatter(payload.name)}
+      </text>
+      <text
+        textAnchor={isOut ? 'end' : 'start'}
+        x={isOut ? x - 6 : x + width + 6}
+        y={y + height / 2 + 13}
+        fontSize="10"
+        stroke="#333"
+        strokeOpacity="0.5"
+      >
+        {payload.value + 'k'}
       </text>
     </Layer>
   );

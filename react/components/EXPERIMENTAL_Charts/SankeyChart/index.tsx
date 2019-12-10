@@ -46,7 +46,7 @@ const SankeyChart: FC<BaseChartProps & SankeyProps>= ({
         )}
         link={(props) => <SankeyLink {...props} />}
       >
-        <Tooltip />
+        <Tooltip separator=': '/>
       </Sankey>
     </ResponsiveContainer>
   )
