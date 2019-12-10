@@ -13,6 +13,7 @@ import PropTypes from 'prop-types'
 type SankeyProps = {
   labelFormatter: Function,
   valueFormatter: Function,
+  CustomTooltip: Function, 
   padding: number,
 }
 
@@ -21,35 +22,35 @@ const SankeyChart: FC<BaseChartProps & SankeyProps>= ({
   config,
   padding,
   labelFormatter,
-  valueFormatter
+  valueFormatter,
 }) => {
   const { configs } = getChartDefaultProps(config)
+
   return (
     <ResponsiveContainer {...configs.container}>
       <Sankey
-          data={data}
-          margin={{
-            left: 200,
-            right: 200,
-            top: 100,
-            bottom: 100
-          }}
-          nodePadding={padding}
-          node={(props) => (
-            <SankeyNode
-              {...props}
-              labelFormatter={labelFormatter}
-              valueFormatter={valueFormatter}
-            />
-          )}
-          link={(props) => <SankeyLink {...props} />}
-        >
-          <Tooltip />
-        </Sankey>
+        data={data}
+        margin={{
+          left: 200,
+          right: 200,
+          top: 100,
+          bottom: 100
+        }}
+        nodePadding={padding}
+        node={(props) => (
+          <SankeyNode
+            {...props}
+            labelFormatter={labelFormatter}
+            valueFormatter={valueFormatter}
+          />
+        )}
+        link={(props) => <SankeyLink {...props} />}
+      >
+        <Tooltip />
+      </Sankey>
     </ResponsiveContainer>
   )
 }
-
 
 SankeyChart.propTypes = {
   /** The source data, in which each element is an object. */

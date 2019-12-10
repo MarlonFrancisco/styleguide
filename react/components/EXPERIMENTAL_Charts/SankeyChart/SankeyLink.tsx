@@ -45,7 +45,7 @@ const SankeyLink: FC<Props> = ({
         fill={fill}
         strokeWidth="0"
         onMouseLeave={() => { setFill(colors[1])}}
-        onMouseEnter={() => { setFill('#9fdfcd')}}
+        onMouseEnter={() => { setFill('#46b5d1')}}
       />
     </Layer>
   );
