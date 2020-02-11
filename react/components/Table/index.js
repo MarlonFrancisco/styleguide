@@ -173,6 +173,7 @@ class Table extends PureComponent {
       bulkActions,
       totalizers,
       filters,
+      striped,
     } = this.props
     const {
       hiddenFields,
@@ -355,6 +356,7 @@ class Table extends PureComponent {
                 containerHeight={containerHeight}
                 selectedRowsIndexes={map(selectedRows, 'id')}
                 density={selectedDensity}
+                striped={striped}
               />
             )}
           </StickyContainer>
@@ -373,6 +375,7 @@ Table.defaultProps = {
   fullWidth: false,
   bulkActions: {},
   totalizers: [],
+  striped: null,
 }
 
 Table.propTypes = {
@@ -509,6 +512,11 @@ Table.propTypes = {
   ]),
   /** Filters property  */
   filters: PropTypes.shape({ ...FilterBar.propTypes }),
+
+  /** Striped table */
+  striped: PropTypes.shape({
+    color: PropTypes.string.isRequired,
+  }),
 }
 
 export default Table

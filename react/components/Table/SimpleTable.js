@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {
@@ -197,6 +198,7 @@ class SimpleTable extends Component {
       lineActions,
       loading,
       selectedRowsIndexes,
+      striped,
     } = this.props
     const { hoverRowIndex, tableHeight } = this.state
 
@@ -361,6 +363,9 @@ class SimpleTable extends Component {
                           : ''
                       } ${columnIndex === 0 && fixFirstColumn ? 'br' : ''}`
 
+                      const stripedRowColor =
+                        striped && rowIndex % 2 === 1 ? striped.color : ''
+
                       return (
                         <CellMeasurer
                           cache={this._cache}
@@ -385,7 +390,7 @@ class SimpleTable extends Component {
                                   rowIndex - 1
                                 )
                                   ? SELECTED_ROW_BACKGROUND
-                                  : '',
+                                  : stripedRowColor,
                               }}
                               className={cellClassNames}
                               onClick={
@@ -485,6 +490,9 @@ SimpleTable.propTypes = {
   ),
   loading: PropTypes.bool,
   selectedRowsIndexes: PropTypes.array,
+  striped: PropTypes.shape({
+    color: PropTypes.string,
+  }),
 }
 
 export default SimpleTable
