@@ -364,7 +364,11 @@ class SimpleTable extends Component {
                       } ${columnIndex === 0 && fixFirstColumn ? 'br' : ''}`
 
                       const stripedRowColor =
-                        striped && rowIndex % 2 === 1 ? striped.color : ''
+                        striped &&
+                        rowIndex % 2 === 1 &&
+                        rowIndex !== hoverRowIndex
+                          ? striped.color
+                          : ''
 
                       return (
                         <CellMeasurer
